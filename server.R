@@ -288,7 +288,15 @@ shinyServer(function(input,output,session){
 
   #prepare data for download
   output$download_mRNAData <- downloadHandler(
-    filename = function() { paste('PCBC_geneExpr_data.csv')},
+    filename = function() {
+      
+      mrna_res <- heatmap_compute_results$mRNA_heatmap
+      mat <- mrna_res$mat
+      
+      validate(need(nrow(mat) <= 30, "Download not available, try a smaller query."))
+      
+      paste('PCBC_geneExpr_data.csv')
+      },
     content  = function(file){
       mrna_res <- heatmap_compute_results$mRNA_heatmap
       
@@ -299,7 +307,15 @@ shinyServer(function(input,output,session){
 
   #prepare data for download
   output$download_miRNAData <- downloadHandler(
-    filename = function() { paste('PCBC_microRNAExpr_data.csv')},
+    filename = function() { 
+      
+      mirna_res <- heatmap_compute_results$miRNA_heatmap
+      mat <- mirna_res$mat
+      
+      validate(need(nrow(mat) <= 30, "Download not available, try a smaller query."))
+      
+      paste('PCBC_microRNAExpr_data.csv')
+      },
     content  = function(file){
       #get the microRNA expression matrix
       mirna_res <- heatmap_compute_results$miRNA_heatmap
@@ -311,7 +327,16 @@ shinyServer(function(input,output,session){
 
   #prepare data for download
   output$download_methylationData <- downloadHandler(
-    filename = function() { paste('PCBC_methylation_data.csv')},
+    filename = function() {
+      
+      methyl_res <- heatmap_compute_results$methyl_heatmap
+      mat <- methyl_res$mat
+      
+      validate(need(nrow(mat) <= 30, "Download not available, try a smaller query."))
+      
+      paste('PCBC_methylation_data.csv')
+      
+      },
     content  = function(file){
       
       #get the methylation matrix
