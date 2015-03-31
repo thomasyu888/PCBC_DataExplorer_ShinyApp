@@ -2,8 +2,9 @@
 #get the PCBC samples raw miRNA counts
 ###
 flog.info('Reading the PCBC raw miRNA Exp data from Synapse', name='synapse')
-miRNA_normCounts <- synGet('syn2701942')
-miRNA_normCounts <- read.delim(miRNA_normCounts@filePath, header=T, sep='\t', as.is=T, stringsAsFactors = F, check.names=F)
+miRNA_normCountsFile <- synGet('syn2701942')
+miRNA_normCounts <- read.delim(miRNA_normCounts@filePath, header=T, sep='\t', 
+                               as.is=T, stringsAsFactors = F, check.names=F)
 temp_rownames <- tolower(miRNA_normCounts$mir)
 miRNA_normCounts$mir <- NULL
 miRNA_normCounts <- apply(miRNA_normCounts,2, function(x) as.numeric(x))
