@@ -32,11 +32,9 @@ shinyUI( fluidPage(
                                rows=8, cols=200,
                                paste0(sample_gene_list, collapse=', ')),
 
-                 br(),
-                 actionButton("custom_search", h4("Update")),
-                 br(),
-                 
                  checkboxInput('incl_corr_genes', 'also include correlated genes', value = FALSE),
+                 
+                 actionButton("custom_search", h4("Update")),               
                  
                  conditionalPanel(
                    condition="input.incl_corr_genes",
@@ -50,15 +48,17 @@ shinyUI( fluidPage(
                    br()
                  ),
                  
-                 h5('1.b. Add miRNA Targets (mirbase ids):'),
-                 tags$textarea(id="custom_miRNA_list",rows=4,cols=200),
                  
-                 br(),
-                 
-                 actionButton("custom_search", h4("Update")),
-                 
-                 br(),
-                 
+                 conditionalPanel(condition="input.maintabs == 'microRNA'",
+                                  h5('1.b. Add miRNA Targets (mirbase ids):'),
+                                  tags$textarea(id="custom_miRNA_list",rows=4,cols=200),
+                                  selectInput("targets_or_probes",
+                                              label=h6("Show targets based on gene selection or specific probes?"),
+                                              choices=c("targets", "probes"),
+                                              selectize=F, multiple=F, selected="targets"),
+                                  br(),
+                                  actionButton("custom_search", h4("Update")),
+                                  br()),
                  value='custom_gene_list'
         ), #END TAB PANEL 1
         
@@ -158,39 +158,36 @@ shinyUI( fluidPage(
       checkboxInput('cluster_rows', 'Cluster the rows', value = TRUE)
       
     ), # END sidebarpanel
-
-  
+    
+    
     #####################
     #Main shiny panel
     #####################
     mainPanel(
-        tabsetPanel(
-          tabPanel("mRNA", 
-                   plotOutput("mRNA_heatMap",height="700px",width="auto",hoverId=NULL),
-                   br(),br(),br(),br(),
-                   htmlOutput("topgene_linkOut"),
-                   downloadButton('download_mRNAData','Download mRNA expression data'),
-                   br(),br(),
-                   HTML(mRNA_data_notes)
-          ),
-          tabPanel("microRNA",
-                   plotOutput("microRNA_heatMap",height="700px",width="auto",hoverId=NULL),
-                   br(),br(),br(),br(),
-                   downloadButton('download_miRNAData','Download microRNA expression data'),
-                   br(),br(),
-                   HTML(miRNA_data_notes)
-          ),
-          tabPanel("methylation",
-                   plotOutput("methylation_heatMap",height="700px",width="auto",hoverId=NULL),
-                   br(),br(),br(),br(), 
-                   downloadButton('download_methylationData','Download methylation data'),
-                   br(),br(),
-                   HTML(meth_data_notes)
-          ),
-          id="maintabs"         
-          )
-      ) #END tabset panel
+      tabsetPanel(
+        tabPanel("mRNA", 
+                 plotOutput("mRNA_heatMap",height="700px",width="auto",hoverId=NULL),
+                 br(),br(),br(),br(),
+                 htmlOutput("topgene_linkOut"),
+                 downloadButton('download_mRNAData','Download mRNA expression data'),
+                 br(),br(),
+                 HTML(mRNA_data_notes)
+        ),
+        tabPanel("microRNA",
+                 plotOutput("microRNA_heatMap",height="700px",width="auto",hoverId=NULL),
+                 br(),br(),br(),br(),
+                 downloadButton('download_miRNAData','Download microRNA expression data'),
+                 br(),br(),
+                 HTML(miRNA_data_notes)
+        ),
+        tabPanel("methylation",
+                 plotOutput("methylation_heatMap",height="700px",width="auto",hoverId=NULL),
+                 br(),br(),br(),br(), 
+                 downloadButton('download_methylationData','Download methylation data'),
+                 br(),br(),
+                 HTML(meth_data_notes)
+        ), id="maintabs") #END tabset panel
     )# END mainPanel 
-) #END sidebarLayout
+  ) #END sidebarLayout
 ) #END fluidpage
 ) #END shinyUI
