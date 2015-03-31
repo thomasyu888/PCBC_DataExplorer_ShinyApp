@@ -186,6 +186,8 @@ shinyUI( fluidPage(
                    downloadButton('download_methylationData','Download methylation data'),
                    br(),br(),
                    HTML(meth_data_notes)
+          ),
+          id="maintabs"         
           )
       ) #END tabset panel
     )# END mainPanel 
