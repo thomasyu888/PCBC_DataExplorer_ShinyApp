@@ -29,11 +29,19 @@ shinyServer(function(input,output,session){
   selected_miRNAs <- reactive({
     #get the list of geneIds that were selected by the user
     # + ones correlated with other genes (if corr option selected) 
-    #this is the reason why not getting geneIds from selected_genes() as it wont have the correlated genes
-    geneIds <- rownames(get_filtered_mRNA_matrix())
-    #get miRNA targetting the selected genes
-    selected_miRNAs <- filter(miRNA_to_genes, GeneID %in% geneIds)
-    selected_miRNAs <- unique(paste(selected_miRNAs$miRNA1,selected_miRNAs$miRNA2,sep=','))
+    
+    if (input$targets_or_probes == 'targets') {
+      flog.debug("Getting miRNAs from gene targets", name="server")      
+      geneIds <- rownames(get_filtered_mRNA_matrix())
+      #get miRNA targetting the selected genes
+      selected_miRNAs <- filter(miRNA_to_genes, GeneID %in% geneIds)
+      selected_miRNAs <- unique(paste(selected_miRNAs$miRNA1,selected_miRNAs$miRNA2,sep=','))
+      
+    }
+    else {
+      flog.debug("Getting miRNAs from user selected list", name="server")      
+      selected_miRNAs <- user_submitted_miRNAlist()
+    }
     flog.debug(sprintf("%s selected_miRNAs", length(selected_miRNAs)), name="server")
     selected_miRNAs
   })
