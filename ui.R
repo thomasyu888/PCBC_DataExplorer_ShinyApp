@@ -111,9 +111,12 @@ myBody <-dashboardBody(
                            # )
                     )                
            ),
+
            box(width = NULL, solidHeader = TRUE,
                #textOutput("infotbl")
-               DT::dataTableOutput('infotbl')
+               #DT::dataTableOutput('infotbl')
+
+               d3heatmapOutput('infoplot')
                # plotOutput("plot1", height = 700)
            )
            

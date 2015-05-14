@@ -16,6 +16,8 @@ library("tidyr")
 library("memoise")
 library("org.Hs.eg.db")
 library("futile.logger")
+library("d3heatmap")
+library("leaflet")
 library(Biobase)
 # Set up logging
 flog.threshold(DEBUG, name='server')
@@ -73,4 +75,5 @@ metadataIdCol <- "UID"
 
 ## Caching for testing
 # save(pathways_list, miRNA_to_genes, eset.mRNA, eset.miRNA, eset.meth, combined_metadata, file="cached_data.RData")
-load("cached_data.RData")
+file <- synGet("syn4108151")
+load(file@filePath)

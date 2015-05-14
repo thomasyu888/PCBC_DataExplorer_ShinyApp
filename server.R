@@ -99,19 +99,33 @@ shinyServer(
 #       ds <- filtered_dataset()
 #       dim(exprs(ds))
 #     })
-    
-    output$infotbl = DT::renderDataTable({
-      ds <- filtered_dataset()
-      foo <- signif(exprs(ds), 3)
-      # foo <- cbind(feature=featureNames(ds), foo)
-      DT::datatable(foo,
-                    options = list(
-                      dom = 'tp',
-                      lengthChange = FALSE,
-                      pageLength = 15,
-                      scrollX = TRUE,
-                      scrollCollapse = TRUE))
-    })
+
+output$infoplot = renderD3heatmap(d3heatmap(exprs(filtered_dataset()))
+  #ds <- filtered_dataset()
+  #foo <- signif(exprs(ds), 3)
+  # foo <- cbind(feature=featureNames(ds), foo)
+  #DT::datatable(signif(exprs(filtered_dataset()), 3),
+   #             options = list(
+    #              dom = 'tp',
+     #             lengthChange = FALSE,
+    #              pageLength = 15,
+     #             scrollX = TRUE,
+      #            scrollCollapse = TRUE))  
+)
+
+# 
+    # output$infotbl = DT::renderDataTable({
+     #  ds <- filtered_dataset()
+      # foo <- signif(exprs(ds), 3)
+       # foo <- cbind(feature=featureNames(ds), foo)
+    #   DT::datatable(foo,
+     #                options = list(
+      #                 dom = 'tp',
+       #                lengthChange = FALSE,
+        #               pageLength = 15,
+         #              scrollX = TRUE,
+          #             scrollCollapse = TRUE))
+    # })
     
 
     user_submitted_features <- reactive({
