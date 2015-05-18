@@ -45,10 +45,12 @@ mySidebar <- dashboardSidebar(disable=TRUE)
 myBody <-dashboardBody(
   fluidRow(
     column(width = 9,
+           
+           # Sample filtering
            fluidRow(height=3,
                     column(width = 9,
                            box(width=NULL, solidHeader=TRUE, status="primary",
-                               title = tagList(shiny::icon("filter", lib = "glyphicon"), "Sample Filters"),
+                               title = tagList(shiny::icon("filter", lib = "glyphicon"), "Sample filters"),
                                tags$table(class="table table-condensed",
                                           tags$tr(
                                             tags$td(selectInput('linetype', h6('Cell Line Type'),
@@ -84,74 +86,57 @@ myBody <-dashboardBody(
                     ),
                     column(width = 3,
                            
-                           box(width=NULL, status='primary', collapsible=TRUE, solidHeader=TRUE,
-                               title = tagList(shiny::icon("th-list", lib="glyphicon"), "Sample labels"),               
+                           # Choose sample labels
+                           box(width=NULL, status='primary', collapsible=TRUE, 
+                               collapsed=TRUE, solidHeader=TRUE,
+                               title = tagList(shiny::icon("th-list", lib="glyphicon"),
+                                               "Sample labels"),               
                                selectInput('heatmap_annotation_labels',
                                            'Annotate Samples by:',
-                                           choices=colnames(combined_metadata)[-1],  #-1 to remove the first value "Sample"
+                                           # -1 to remove the first value "Sample"
+                                           choices=colnames(combined_metadata)[-1],
                                            selected='Diffname_short')
                            ),
-                           infoBox(title="Features", value=10**3, fill=TRUE, width=NULL),
-                           infoBox(title="Samples", value=10, fill=TRUE, width=NULL)
                            
-#                            fluidRow(width=NULL, 
-#                                     infoBox(title="Features", value=10**3, fill=TRUE, width=NULL),
-#                                     infoBox(title="Samples", value=10**3, fill=TRUE, width=NULL)
-#                            )
-                           
-                           #fluidRow(
-                          #   infoBox("New Orders", 10 * 2, icon = icon("credit-card"), fill = TRUE),
-                             #infoBox("Samples", 10 * 2, icon = icon("info-sign", lib='glyphicon')),
-                          
-                           #)
-                           
-                           
-                           # box(width=NULL, status="info", solidHeader=TRUE,
-                           # title = tagList(shiny::icon("info-sign", lib = "glyphicon"), "Plot Status")
-                           # )
+                           # Information on number of features/samples selected
+                           infoBoxOutput("featxsamples", width=NULL)
                     )                
            ),
 
-           box(width = NULL, solidHeader = TRUE,
+           #box(width = NULL, solidHeader = TRUE,
                #textOutput("infotbl")
                #DT::dataTableOutput('infotbl')
 
-               d3heatmapOutput('infoplot')
+               #d3heatmapOutput('infoplot'))
                # plotOutput("plot1", height = 700)
-           )
+
+           # Main plot area
+          box(width = NULL, solidHeader = TRUE,
+               conditionalPanel("input.show_dt",
+                                DT::dataTableOutput('infotbl')),
+               
+               conditionalPanel("!input.show_dt",
+                                d3heatmapOutput('infoplot')))
+           #)
            
     ),
-    #)
     
     column(width = 3,
+           
+           # Plot selection box
            box(width = NULL, status = "primary", solidHeader=TRUE,
-               title="Plot to display",
+               title="Select data to display",
                selectInput("plotdisplay",
                            label=NULL, #h6(""),
                            choices=c("mRNA", "miRNA", "Methylation"),
                            selectize=T, multiple=F, selected="mRNA"),
                
-               uiOutput("plotHelp")
-#                conditionalPanel('(input.custom_search == "Gene" | input.custom_search == "Pathway") & input.plotdisplay == "mRNA"',
-#                                 p("Plotting selected genes.")),
-#                
-#                conditionalPanel('(input.custom_search == "Gene" | input.custom_search == "Pathway") & input.plotdisplay == "miRNA"',
-#                                 p("Plotting miRNAs targeting selected genes.")),
-#                
-#                conditionalPanel('(input.custom_search == "Gene" | input.custom_search == "Pathway") & input.plotdisplay == "Methylation"',
-#                                 p("Plotting methylation probes of selected genes.")),
-#                
-#                conditionalPanel('input.custom_search == "miRNA" & input.plotdisplay == "miRNA"',
-#                                 p("Plotting selected miRNAs.")),
-#                
-#                conditionalPanel('input.custom_search == "miRNA" & input.plotdisplay == "mRNA"',
-#                                 p("Plotting genes targeted by selected miRNAs.")),
-#                
-#                conditionalPanel('input.custom_search == "miRNA" & input.plotdisplay == "Methylation"',
-#                                 p("Plotting methylation probes for genes targeted by selected miRNAs."))
+               checkboxInput('show_dt', 'Show data values instead of heatmap', value = FALSE),
                
+               uiOutput("plotHelp")               
            ),
            
+           # Searching box
            tabBox(width=NULL, status="info",
                   id="custom_search",
                   # Title can include an icon
@@ -167,13 +152,16 @@ myBody <-dashboardBody(
                                        selectize=T, multiple=F)),
                   tabPanel("miRNA", 
                            tags$textarea(paste0(sample_miRNAs, collapse="\n"),
-                                         rows=5, id="custom_input_list", style="width: 100%"),
+                                         rows=5, id="custom_mirna_list", style="width: 100%"),
                            p(class = "text-muted",
                              "This is an example note in a muted text color.")),
                   
                   actionButton("Refresh", "Refresh")
            ),
-           box(width = NULL, status = "warning", solidHeader=TRUE, collapsible=TRUE,
+           
+           # Correlation box
+           box(width = NULL, status = "warning", solidHeader=TRUE, 
+               collapsible=TRUE, collapsed=TRUE,
                title = tagList(shiny::icon("plus-sign", lib="glyphicon"), "Correlation"),               
                conditionalPanel('input.search_box == "miRNA"',
                                 "Not available."),
@@ -199,7 +187,10 @@ myBody <-dashboardBody(
                                 )
                )
            ),
-           box(width = NULL, status = "warning", collapsible=TRUE, solidHeader=TRUE,
+           
+           # Clustering box
+           box(width = NULL, status = "warning", solidHeader=TRUE, 
+               collapsible=TRUE, collapsed=TRUE,
                title = tagList(shiny::icon("wrench", lib="glyphicon"), "Clustering"),
                #distance metric
                selectInput("clustering_distance", "Distance Calculation",
@@ -207,7 +198,7 @@ myBody <-dashboardBody(
                                      "manhattan", "canberra", "binary", "minkowski"),
                            selectize=T, multiple=F, selected="correlation"),
                
-               #linkage 
+               # set the clustering method
                selectInput("clustering_method", "Clustering Method",
                            choices=c("ward", "single", "complete", "average", 
                                      "mcquitty", "median", "centroid"),
@@ -219,13 +210,15 @@ myBody <-dashboardBody(
                
            ),
            
-           box(width=NULL, status = 'info', collapsible=TRUE, solidHeader=TRUE,
+           # Download box
+           box(width=NULL, status = 'info', solidHeader=TRUE,
+               collapsible=TRUE, collapsed=TRUE,
                title = tagList(shiny::icon("save", lib = "glyphicon"), "Download"),
                selectInput("savetype",
                            label=h6("Save as:"),
                            choices=c("comma separated (CSV)", "tab separated (TSV)"),
                            selectize=F, multiple=F, selected="comma separated (CSV)"),
-               actionButton("Download", "Download")
+               downloadButton('download_data','Download')
            )
     )
   )
