@@ -116,7 +116,8 @@ myBody <-dashboardBody(
                                 DT::dataTableOutput('infotbl')),
                
                conditionalPanel("!input.show_dt",
-                                d3heatmapOutput('infoplot')))
+                                iHeatmapOutput('infoplot')))
+                               # d3heatmapOutput('infoplot')))
            #)
            
     ),

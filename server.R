@@ -97,7 +97,8 @@ shinyServer(
 #       dim(exprs(ds))
 #     })
 
-     output$infoplot = renderD3heatmap(d3heatmap(signif(exprs(filtered_dataset()),3)))
+    output$infoplot = renderIHeatmap(iHeatmap(signif(exprs(filtered_dataset()),3)))
+    #output$infoplot = renderD3heatmap(d3heatmap(signif(exprs(filtered_dataset()),3)))
 
 # 
      output$infotbl = DT::renderDataTable({
