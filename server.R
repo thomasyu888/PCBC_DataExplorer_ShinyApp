@@ -247,6 +247,7 @@ shinyServer(
       withProgress(session, {
         setProgress(message = "clustering & rendering heatmap, please wait", 
                     detail = "This may take a few moments...")
+        ##Look at what expHeatmap does
         heatmap_cache$heatmap <- expHeatMap(m,annotation,
                                             clustering_distance_rows = input$clustering_distance,
                                             clustering_distance_cols = input$clustering_distance,
