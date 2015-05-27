@@ -120,18 +120,7 @@ shinyServer(
     #       dim(exprs(ds))
     #     })
     
-   # output$infotbl <- DT::renderDataTable({
-    #  ds <- filtered_dataset()
-     # foo <- signif(exprs(ds), 3)
-      # foo <- cbind(feature=featureNames(ds), foo)
-      #DT::datatable(foo,
-       #             options = list(
-        #              dom = 'tp',
-         #             lengthChange = FALSE,
-          #            pageLength = 15,
-           #           scrollX = TRUE,
-            #          scrollCollapse = TRUE))
-  #  })
+
 
     
     # prepare data for download
@@ -222,9 +211,9 @@ shinyServer(
     })
     
     heatmap_cache <- reactiveValues()
-    
+
     #return the heatmap plot
-    output$heatmap <- renderPlot({  
+    output$infoplot <- renderIHeatmap({  
       flog.debug("Making heatmap", name='server')
       
       cluster_rows <- input$cluster_rows
@@ -243,22 +232,32 @@ shinyServer(
       
       fontsize_row <- ifelse(nrow(m) > 100, 0, 8)
       fontsize_col <- ifelse(ncol(m) > 50, 0, 8)    
-      
-      withProgress(session, {
-        setProgress(message = "clustering & rendering heatmap, please wait", 
-                    detail = "This may take a few moments...")
+      iHeatmap(m,
+               #colAnnote = as.matrix(annotation),
+               #clustering_distance_rows = input$clustering_distance,
+               #clustering_distance_cols = input$clustering_distance,
+               distM = input$clustering_distance,
+               #fontsize_col=fontsize_col, 
+               #fontsize_row=fontsize_row,
+               #scale=T,
+                ClustM = input$clustering_method,
+               #explicit_rownames = fData(m_eset)$explicit_rownames,
+                Rowv=cluster_rows, Colv=cluster_cols)
+      #withProgress(session, {
+       # setProgress(message = "clustering & rendering heatmap, please wait", 
+       #             detail = "This may take a few moments...")
         ##Look at what expHeatmap does
-        heatmap_cache$heatmap <- expHeatMap(m,annotation,
-                                            clustering_distance_rows = input$clustering_distance,
-                                            clustering_distance_cols = input$clustering_distance,
-                                            fontsize_col=fontsize_col, 
-                                            fontsize_row=fontsize_row,
-                                            scale=T,
-                                            clustering_method = input$clustering_method,
-                                            explicit_rownames = fData(m_eset)$explicit_rownames,
-                                            cluster_rows=cluster_rows, cluster_cols=cluster_cols,
-                                            drawColD=FALSE)
-      }) #END withProgress
+       # heatmap_cache$heatmap <- iHeatmap(m,colAnnote = annotation,
+                                            #clustering_distance_rows = input$clustering_distance,
+                                            #clustering_distance_cols = input$clustering_distance,
+                                            #distM = input$clustering_distance,
+                                          #fontsize_col=fontsize_col, 
+                                            #fontsize_row=fontsize_row,
+                                            #scale=T,
+                                           # ClustM = input$clustering_method,
+                                            #explicit_rownames = fData(m_eset)$explicit_rownames,
+                                           # Rowv=cluster_rows, Colv=cluster_cols)
+      #}) #END withProgress
     })
     
   }
