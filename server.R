@@ -121,8 +121,6 @@ shinyServer(
     #     })
     
 
-
-    
     # prepare data for download
     output$download_data <- downloadHandler(
       filename = function() { paste('PCBC_geneExpr_data.csv')},
