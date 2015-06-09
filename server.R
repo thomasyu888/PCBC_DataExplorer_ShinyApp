@@ -233,7 +233,7 @@ shinyServer(
       fontsize_row <- ifelse(nrow(m) > 100, 0, 8)
       fontsize_col <- ifelse(ncol(m) > 50, 0, 8)    
       iHeatmap(m,
-               #colAnnote = as.matrix(annotation),
+               colAnnote = annotation,
                #clustering_distance_rows = input$clustering_distance,
                #clustering_distance_cols = input$clustering_distance,
                distM = input$clustering_distance,
