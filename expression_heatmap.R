@@ -3,6 +3,7 @@ require(RColorBrewer)
 require(memoise)
 library("WGCNA")
 library(flashClust)
+library(scales)
 
 lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, 
               treeheight_col, treeheight_row, legend, annotation, annotation_colors, annotation_legend, 

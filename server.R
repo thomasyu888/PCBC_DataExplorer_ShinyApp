@@ -97,7 +97,7 @@ shinyServer(
 #       dim(exprs(ds))
 #     })
 
-    output$infoplot = renderIHeatmap(iHeatmap(signif(exprs(filtered_dataset()),3)))
+    #output$infoplot = renderIHeatmap(iHeatmap(signif(exprs(filtered_dataset()),3)))
     #output$infoplot = renderD3heatmap(d3heatmap(signif(exprs(filtered_dataset()),3)))
 
 # 
@@ -230,32 +230,38 @@ shinyServer(
       
       fontsize_row <- ifelse(nrow(m) > 100, 0, 8)
       fontsize_col <- ifelse(ncol(m) > 50, 0, 8)    
-      iHeatmap(m,
-               colAnnote = annotation,
-               #clustering_distance_rows = input$clustering_distance,
-               #clustering_distance_cols = input$clustering_distance,
+      iHeatmap(m,colAnnote = annotation,
+               #rowAnnote =,
                distM = input$clustering_distance,
-               #fontsize_col=fontsize_col, 
-               #fontsize_row=fontsize_row,
-               #scale=T,
-                ClustM = input$clustering_method,
-               #explicit_rownames = fData(m_eset)$explicit_rownames,
-                Rowv=cluster_rows, Colv=cluster_cols)
+               #width =,
+               #height =,
+               scale = TRUE,
+               #font_size =10,
+               col_scale=FALSE,
+               #colors = "RdYlBu",
+               #yaxis_width =,
+               #xaxis_height =,
+               font_size = 6,
+               ClustM = input$clustering_method,
+               Rowv=cluster_rows, Colv=cluster_cols)
       #withProgress(session, {
-       # setProgress(message = "clustering & rendering heatmap, please wait", 
+      # setProgress(message = "clustering & rendering heatmap, please wait", 
        #             detail = "This may take a few moments...")
         ##Look at what expHeatmap does
-       # heatmap_cache$heatmap <- iHeatmap(m,colAnnote = annotation,
+       # heatmap_cache$heatmap <- expHeatMap(m,annotation,
                                             #clustering_distance_rows = input$clustering_distance,
                                             #clustering_distance_cols = input$clustering_distance,
-                                            #distM = input$clustering_distance,
-                                          #fontsize_col=fontsize_col, 
+         #                                   distM = input$clustering_distance,
+                                            #fontsize_col=fontsize_col, 
                                             #fontsize_row=fontsize_row,
                                             #scale=T,
-                                           # ClustM = input$clustering_method,
+                                            #clustering_method = input$clustering_method,
+          #                                  ClustM = input$clustering_method,
                                             #explicit_rownames = fData(m_eset)$explicit_rownames,
-                                           # Rowv=cluster_rows, Colv=cluster_cols)
-      #}) #END withProgress
+                                            #Rowv=cluster_rows, Colv=cluster_cols)
+                                            #cluster_rows=cluster_rows, cluster_cols=cluster_cols,
+                                            #drawColD=FALSE)
+     # }) #END withProgress
     })
     
   }

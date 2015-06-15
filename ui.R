@@ -197,7 +197,7 @@ myBody <-dashboardBody(
                selectInput("clustering_distance", "Distance Calculation",
                            choices=c("correlation", "euclidean", "maximum", 
                                      "manhattan", "canberra", "binary", "minkowski"),
-                           selectize=T, multiple=F, selected="euclidean"),
+                           selectize=T, multiple=F, selected="correlation"),
                
                # set the clustering method
                selectInput("clustering_method", "Clustering Method",
