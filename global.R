@@ -19,6 +19,7 @@ library("futile.logger")
 library("iHeatmap")
 library("htmlwidgets")
 library("leaflet")
+library("flashClust")
 library(Biobase)
 # Set up logging
 flog.threshold(DEBUG, name='server')
