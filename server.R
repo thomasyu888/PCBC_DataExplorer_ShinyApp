@@ -216,6 +216,7 @@ shinyServer(
       
       cluster_rows <- input$cluster_rows
       cluster_cols <- input$cluster_cols
+      to_scale <- input$to_scale
       
       m_eset <- filtered_dataset()
       m <- exprs(m_eset)
@@ -235,7 +236,8 @@ shinyServer(
                distM = input$clustering_distance,
                #width =,
                #height =,
-               scale = TRUE,
+               scale = to_scale,
+               probs=input$quantile_number,
                #font_size =10,
                col_scale=FALSE,
                #colors = "RdYlBu",
