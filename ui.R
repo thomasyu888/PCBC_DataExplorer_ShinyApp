@@ -22,25 +22,6 @@ library(DT)
 myHeader <- dashboardHeader(title="PCBC Data Explorer", disable=TRUE)
 
 mySidebar <- dashboardSidebar(disable=TRUE)
-#   sidebarMenu(
-#     menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"))
-#   ))
-
-
-# This is the user-interface definition of a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
-
-library(shinydashboard)
-
-myHeader <- dashboardHeader(title="PCBC Data Explorer", disable=TRUE)
-
-mySidebar <- dashboardSidebar(disable=TRUE)
-#   sidebarMenu(
-#     menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"))
-#   ))
 
 myBody <-dashboardBody(
   fluidRow(
@@ -146,7 +127,8 @@ myBody <-dashboardBody(
                            tags$textarea(paste0(sample_gene_list, collapse="\n"),
                                          rows=5, id="custom_input_list", style="width: 100%"),
                            p(class = "text-muted",
-                             "Gene symbol (e.g., POU5F1), Ensembl (e.g., ENSG00000204531), or Entrez (e.g., 5460) IDs.")),
+                             "Gene symbol (e.g., POU5F1), Ensembl (e.g., ENSG00000204531), or Entrez (e.g., 5460) IDs."),
+                           actionButton("refreshGene", "Refresh")),
                   tabPanel("Pathway", 
                            selectInput("selected_pathways", label=NULL,
                                        choices = names(pathways_list),
@@ -155,19 +137,18 @@ myBody <-dashboardBody(
                            tags$textarea(paste0(sample_miRNAs, collapse="\n"),
                                          rows=5, id="custom_mirna_list", style="width: 100%"),
                            p(class = "text-muted",
-                             "This is an example note in a muted text color.")),
-                  
-                  actionButton("Refresh", "Refresh")
+                             "This is an example note in a muted text color."),
+                           actionButton("refreshmiRNA", "Refresh"))
            ),
            
            # Correlation box
            box(width = NULL, status = "warning", solidHeader=TRUE, 
                collapsible=TRUE, collapsed=TRUE,
                title = tagList(shiny::icon("plus-sign", lib="glyphicon"), "Correlation"),               
-               conditionalPanel('input.search_box == "miRNA"',
+               conditionalPanel('input.plotdisplay != "mRNA"',
                                 "Not available."),
                
-               conditionalPanel('input.search_box != "miRNA"',
+               conditionalPanel('input.plotdisplay == "mRNA"',
                                 checkboxInput('incl_corr_genes', 
                                               'also include correlated genes', 
                                               value = FALSE),
