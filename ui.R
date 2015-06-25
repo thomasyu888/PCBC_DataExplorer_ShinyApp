@@ -185,18 +185,25 @@ myBody <-dashboardBody(
                            choices=c("ward", "single", "complete", "average", 
                                      "mcquitty", "median", "centroid"),
                            selectize=T, multiple=F, selected="complete"),
-               # select quantiles
-               selectInput("quantile_number", "Quantiles",
-                           choices=c(0, 10, 20,30,40,50,60,70,80,90,100),
-                           selectize=T, multiple=F, selected=0),
                
                checkboxInput('cluster_cols', 'Cluster the columns', value = TRUE),
                
-               checkboxInput('cluster_rows', 'Cluster the rows', value = TRUE),
-                  
-               checkboxInput('to_scale', 'Scale', value=FALSE)
+               checkboxInput('cluster_rows', 'Cluster the rows', value = TRUE)
                
            ),
+           
+           # Coloring box
+           box(width = NULL, status = "warning", solidHeader=TRUE, 
+               collapsible=TRUE, collapsed=TRUE,
+               title = tagList(shiny::icon("wrench", lib="glyphicon"), "Colors"),
+               # select quantiles
+               selectInput("quantile_number", "Quantiles",
+                           choices=c(100,90,80,70,60,50),
+                           selectize=T, multiple=F, selected=100),
+               
+               checkboxInput('to_scale', 'Scale', value=FALSE)
+               
+            ),
            
            # Download box
            box(width=NULL, status = 'info', solidHeader=TRUE,
