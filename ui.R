@@ -138,7 +138,15 @@ myBody <-dashboardBody(
                                          rows=5, id="custom_mirna_list", style="width: 100%"),
                            p(class = "text-muted",
                              "This is an example note in a muted text color."),
-                           actionButton("refreshmiRNA", "Refresh"))
+                           
+                           actionButton("refreshmiRNA", "Refresh")),
+                  
+                  tabPanel("Methylation", 
+                           tags$textarea(paste0(sample_methyl, collapse="\n"),
+                                         rows=5, id="custom_methyl_list", style="width: 100%"),
+                           p(class = "text-muted",
+                             "This is an example note in a muted text color."),
+                           actionButton("refreshMethyl", "Refresh"))
            ),
            
            # Correlation box
@@ -178,13 +186,13 @@ myBody <-dashboardBody(
                selectInput("clustering_distance", "Distance Calculation",
                            choices=c("correlation", "euclidean", "maximum", 
                                      "manhattan", "canberra", "binary", "minkowski"),
-                           selectize=T, multiple=F, selected="correlation"),
+                           selectize=T, multiple=F, selected="euclidean"),
                
                # set the clustering method
                selectInput("clustering_method", "Clustering Method",
                            choices=c("ward", "single", "complete", "average", 
                                      "mcquitty", "median", "centroid"),
-                           selectize=T, multiple=F, selected="complete"),
+                           selectize=T, multiple=F, selected="average"),
                
                checkboxInput('cluster_cols', 'Cluster the columns', value = TRUE),
                
@@ -232,7 +240,7 @@ myBody <-dashboardBody(
                            label=h6("Save as:"),
                            choices=c("comma separated (CSV)", "tab separated (TSV)"),
                            selectize=F, multiple=F, selected="comma separated (CSV)"),
-               downloadButton('download_data','Download')
+               downloadButton(outputId='download_data', label='Download')
            )
     )
   )

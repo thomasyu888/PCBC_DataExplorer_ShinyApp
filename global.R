@@ -57,12 +57,16 @@ source("loadPrecomputedData.R")
 # f <- File("cached_data.RData", parentId="syn4108202")
 # o <- synStore(f)
 
+
 ## Caching for testing
 # save(pathways_list, miRNA_to_genes, eset.mRNA, eset.miRNA, eset.meth, combined_metadata, file="cached_data.RData")
 #file <- synGet("syn4108151")
 #load(file@filePath)
 
-use_cache <- TRUE
+
+
+use_cache <- FALSE
+
 cacheId <- "syn4108151"
 
 if (use_cache) {
@@ -75,7 +79,8 @@ if (use_cache) {
   metadataColsToUse <- c("Cell_Line_Type", "Reprogramming_Gene_Combination", 
                          "Reprogramming_Vector_Type", "Tissue_of_Origin", "Diffname_short",
                          "Cell_Type_of_Origin", "Gender", "Originating_Lab_ID",
-                         "Cell_Line_of_Origin", "Donor_ID", "Originating_Lab", "Cell_Type")
+                         "Cell_Line_of_Origin", "Donor_ID", "Originating_Lab", "Cell_Type",
+                         "Culture_Conditions")
   # metadataColsToUse <- c("Cell_Line_Type")
   metadataIdCol <- "UID"
   

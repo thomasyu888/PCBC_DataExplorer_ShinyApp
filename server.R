@@ -43,9 +43,13 @@ shinyServer(
              Pathway_miRNA="Plotting miRNAs targeting selected genes.",
              miRNA_miRNA="Plotting selected miRNAs.",
              
-             Gene_Methylation="Plotting miRNAs targeting selected genes.",
-             Pathway_Methylation="Plotting miRNAs targeting selected genes.",
+             Gene_Methylation="Plotting methylation probes targeting selected genes.",
+             Pathway_Methylation="Plotting methylation probes targeting selected genes.",
              miRNA_Methylation="Plotting methylation probes for genes targeted by selected miRNAs.",
+             
+             Methylation_Methylation="Plotting methylation probes.",
+             Methylation_mRNA="Plotting genes targeted by methylation probes.",
+             
              "Unknown selection.")
       
     })  
@@ -54,7 +58,7 @@ shinyServer(
       
       ds <- dataset()
       ds_filtered <- filter_by_metadata(input, ds)
-      
+      flog.debug(sprintf("filtered ds dims: %s", dim(ds_filtered)), name="server")
       user_feats <- user_submitted_features()
       feats <- intersect(user_feats, featureNames(ds_filtered))
       flog.debug(sprintf("# features in common: %s", length(feats)), name="server")
@@ -99,12 +103,15 @@ shinyServer(
 
     # prepare data for download
     output$download_data <- downloadHandler(
-      filename = function() { paste('PCBC_geneExpr_data.csv')},
+      filename = function() {'PCBC_data.csv'},
       content  = function(file){
         res <- filtered_dataset()
-        mat <- exprs(res)
-        output_download_data(mat=mat, file=file)        
-      })
+        mat <- exprs(res)        
+        df <- cbind(data.frame(ID=rownames(mat)),
+                    as.data.frame(mat))
+        write.csv(df, file, row.names=F, col.names=T)
+      }
+      )
     
     user_submitted_features <- reactive({
       if (input$custom_search == "Gene") {
@@ -113,10 +120,14 @@ shinyServer(
       else if(input$custom_search == "miRNA") {
         input$refreshmiRNA
       }
+      else if(input$custom_search == "Methylation") {
+        input$refreshMethyl
+      }
       
       geneList <- isolate(input$custom_input_list)
       selectedPathway <- isolate(input$selected_pathways)
       mirnaList <- isolate(input$custom_mirna_list)
+      methylList <- isolate(input$custom_methyl_list)
       
       curr_filter_type <- paste(input$custom_search, input$plotdisplay, sep="_")
       flog.debug(curr_filter_type, name="server")
@@ -159,7 +170,7 @@ shinyServer(
         featureList <- clean_list(geneList, change_case=toupper)
         featureList <- convert_to_EntrezIds(featureList)
         flt_res <- filter(meth_to_gene, entrezID %in% featureList)
-        featureList <- unique(flt_res$methProbe)
+        featureList <- unique(flt_res$methProbeID)
       }
       else if (curr_filter_type == "miRNA_Methylation") {
         featureList <- clean_list(mirnaList, change_case=tolower)
@@ -168,7 +179,17 @@ shinyServer(
         featureList <- unique(selected_miRNAs$GeneID)
         featureList <- convert_to_EntrezIds(featureList)
         flt_res <- filter(meth_to_gene, entrezID %in% featureList)
-        featureList <- unique(flt_res$methProbe)
+        featureList <- unique(flt_res$methProbeID)
+      }
+      else if (curr_filter_type == "Methylation_Methylation") {
+        featureList <- clean_list(methylList, change_case=tolower)
+        print(featureList)
+      }
+      else if (curr_filter_type == "Methylation_mRNA") {
+        featureList <- clean_list(methylList, change_case=tolower)
+        flt_res <- filter(meth_to_gene, methProbeID %in% featureList)
+        featureList <- unique(flt_res$entrezID)
+        featureList <- convert_to_ensemblIds(featureList)
       }
       else {
         featureList <- c()
@@ -200,9 +221,9 @@ shinyServer(
       m <- exprs(m_eset)
       m <- data.matrix(m)
       
-      validate( need( ncol(m) != 0, "Filtered mRNA expression matrix contains 0 Samples") )
-      validate( need( nrow(m) != 0, "Filtered mRNA expression matrix contains 0 genes") )
-      validate( need(nrow(m) < 10000, "Filtered mRNA expression matrix contains > 10000 genes. MAX LIMIT 10,000 ") )
+      validate( need( ncol(m) != 0, "Filtered matrix contains 0 Samples.") )
+      validate( need( nrow(m) != 0, "Filtered matrix contains 0 features.") )
+      validate( need(nrow(m) < 10000, "Filtered matrix contains > 10000 genes.") )
       
       filtered_metadata <- pData(m_eset)
       annotation <- get_heatmapAnnotation(input$heatmap_annotation_labels, filtered_metadata)
