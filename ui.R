@@ -190,18 +190,37 @@ myBody <-dashboardBody(
                
                checkboxInput('cluster_rows', 'Cluster the rows', value = TRUE)
                
+#                selectInput("quantile_number", "Quantiles",
+#                            choices=c(100,90,80,70,60,50),
+#                            selectize=T, multiple=F, selected=100),
+#                
+#                selectInput("color_scheme", "Colors",
+#                            choices=c("RdYlBu","Spectral","RdBu","PRGn","RdGy"),
+#                            selectize=T, multiple=F, selected="RdYlBu"),
+#                
+#                checkboxInput('to_scale', 'Scale', value=FALSE)
            ),
            
-           # Coloring box
-           box(width = NULL, status = "warning", solidHeader=TRUE, 
-               collapsible=TRUE, collapsed=TRUE,
-               title = tagList(shiny::icon("wrench", lib="glyphicon"), "Colors"),
-               # select quantiles
-               selectInput("quantile_number", "Quantiles",
-                           choices=c(100,90,80,70,60,50),
-                           selectize=T, multiple=F, selected=100),
+          # Coloring box
+          box(width = NULL, status = "warning", solidHeader=TRUE, 
+              collapsible=TRUE, collapsed=TRUE,
+              title = tagList(shiny::icon("wrench", lib="glyphicon"), "Colors"),
+              # select quantiles
+              selectInput("quantile_number", "Quantiles",
+                          choices=c("0-100%"=100,"10-90%"=90,"20-80%"=80,"30-70%"=70,"40-60%"=60,"50-50%"=50),
+                          selectize=T, multiple=F, selected=100),
                
-               checkboxInput('to_scale', 'Scale', value=FALSE)
+              selectInput("color_scheme", "Colors",
+                          choices=c("Red/Yellow/Blue" = "RdYlBu","Spectral",
+                                    "Red/Blue" = "RdBu","Purple/Green"="PRGn","Red/Grey"="RdGy"),
+                          selectize=T, multiple=F, selected="Red/Yellow/Blue"),
+               
+              checkboxInput('to_scale', 'Scale', value=FALSE),
+              conditionalPanel(
+                condition="input.to_scale",
+                selectInput("scale_by", "Scale by",
+                            choices=c("Rows" = FALSE,"Columns" = TRUE),
+                            selectize=T, multiple=F, selected="Rows"))
                
             ),
            

@@ -195,7 +195,7 @@ shinyServer(
       cluster_rows <- input$cluster_rows
       cluster_cols <- input$cluster_cols
       to_scale <- input$to_scale
-      
+      scale_by <- input$scale_by
       m_eset <- filtered_dataset()
       m <- exprs(m_eset)
       m <- data.matrix(m)
@@ -212,12 +212,13 @@ shinyServer(
       iHeatmap(m,colAnnote = annotation,
                #rowAnnote =,
                distM = input$clustering_distance,
+               color= input$color_scheme,
                #width =,
                #height =,
                scale = to_scale,
                probs=input$quantile_number,
                #font_size =10,
-               col_scale=FALSE,
+               col_scale=scale_by,
                #colors = "RdYlBu",
                #yaxis_width =,
                #xaxis_height =,
