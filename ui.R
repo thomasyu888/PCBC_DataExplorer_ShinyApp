@@ -190,7 +190,7 @@ myBody <-dashboardBody(
                
                # set the clustering method
                selectInput("clustering_method", "Clustering Method",
-                           choices=c("ward", "single", "complete", "average", 
+                           choices=c("ward"="ward.D2", "single", "complete", "average", 
                                      "mcquitty", "median", "centroid"),
                            selectize=T, multiple=F, selected="average"),
                
