@@ -86,20 +86,12 @@ shinyServer(
       # foo <- cbind(feature=featureNames(ds), foo)
       DT::datatable(foo,
                     options = list(
-
                       dom = 'tp',
                       lengthChange = FALSE,
                       pageLength = 15,
                       scrollX = TRUE,
                       scrollCollapse = TRUE))
      })
-
-    
-    #     output$infotbl <- renderText({
-    #       ds <- filtered_dataset()
-    #       dim(exprs(ds))
-    #     })
-    
 
     # prepare data for download
     output$download_data <- downloadHandler(
@@ -111,7 +103,7 @@ shinyServer(
                     as.data.frame(mat))
         write.csv(df, file, row.names=F, col.names=T)
       }
-      )
+    )
     
     user_submitted_features <- reactive({
       if (input$custom_search == "Gene") {
