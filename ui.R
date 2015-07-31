@@ -16,15 +16,14 @@ miRNA_data_notes <- 'Data Processing Notes:<br>Using miRNA normalized data matri
 # http://shiny.rstudio.com
 #
 
-library(shinydashboard)
-library(DT)
-
 myHeader <- dashboardHeader(title="PCBC Data Explorer", disable=TRUE)
 
 mySidebar <- dashboardSidebar(disable=TRUE)
 
 myBody <-dashboardBody(
   fluidRow(
+    verbatimTextOutput("heatmap_max"),
+    
     column(width = 9,
            
            # Sample filtering
@@ -95,11 +94,13 @@ myBody <-dashboardBody(
           box(width = NULL, solidHeader = TRUE,
                conditionalPanel("input.show_dt",
                                 DT::dataTableOutput('infotbl')),
-               
-               conditionalPanel("!input.show_dt",
-                                iHeatmapOutput('infoplot')))
-                               # d3heatmapOutput('infoplot')))
-           #)
+              
+                conditionalPanel('!input.show_dt & output.heatmap_max < 16000 ',
+                                    iHeatmapOutput('infoplot',height=650)),
+                conditionalPanel('!input.show_dt & output.heatmap_max >= 16000',
+                                      plotOutput("heatmap",height=650))
+                               
+            )
            
     ),
     

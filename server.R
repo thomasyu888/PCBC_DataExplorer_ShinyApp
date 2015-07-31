@@ -1,4 +1,4 @@
-library(DT)
+
 
 clean_list <- function(x, change_case=toupper) {
   # Split by space, comma or new lines
@@ -200,10 +200,52 @@ shinyServer(
     })
     
     heatmap_cache <- reactiveValues()
-
-    #return the heatmap plot
+    
+    output$heatmap_max <- renderText({
+      m_eset <- filtered_dataset()
+      m <- exprs(m_eset)
+      m <- data.matrix(m)
+      return(ncol(m)*nrow(m))
+    })
+#     #return the heatmap plot
+    output$heatmap <- renderPlot({  
+      flog.debug("Making static heatmap", name='server')
+      
+      cluster_rows <- input$cluster_rows
+      cluster_cols <- input$cluster_cols
+      
+      m_eset <- filtered_dataset()
+      m <- exprs(m_eset)
+      m <- data.matrix(m)
+      
+      validate( need( ncol(m) != 0, "Filtered matrix contains 0 Samples.") )
+      validate( need( nrow(m) != 0, "Filtered matrix contains 0 features.") )
+      validate( need(nrow(m) < 10000, "Filtered matrix contains > 10000 genes.") )
+      
+      filtered_metadata <- pData(m_eset)
+      annotation <- get_heatmapAnnotation(input$heatmap_annotation_labels, filtered_metadata)
+      
+      fontsize_row <- ifelse(nrow(m) > 100, 0, 8)
+      fontsize_col <- ifelse(ncol(m) > 50, 0, 8)    
+      
+     # withProgress(session, {
+      #  setProgress(message = "clustering & rendering heatmap, please wait", 
+       #             detail = "This may take a few moments...")
+        heatmap_cache$heatmap <- expHeatMap(m,annotation,
+                                            clustering_distance_rows = input$clustering_distance,
+                                            clustering_distance_cols = input$clustering_distance,
+                                            fontsize_col=fontsize_col, 
+                                            fontsize_row=fontsize_row,
+                                            scale=T,
+                                            clustering_method = input$clustering_method,
+                                            explicit_rownames = fData(m_eset)$explicit_rownames,
+                                            cluster_rows=cluster_rows, cluster_cols=cluster_cols,
+                                            drawColD=FALSE)
+      #}) #END withProgress
+    })
+    
     output$infoplot <- renderIHeatmap({  
-      flog.debug("Making heatmap", name='server')
+      flog.debug("Making interactive heatmap", name='server')
       
       cluster_rows <- input$cluster_rows
       cluster_cols <- input$cluster_cols
@@ -228,34 +270,15 @@ shinyServer(
                color= input$color_scheme,
                #width =,
                #height =,
-               scale = to_scale,
+               #scale = to_scale,
                probs=input$quantile_number,
-               #font_size =10,
-               col_scale=scale_by,
+               #col_scale=scale_by,
                #colors = "RdYlBu",
                #yaxis_width =,
                #xaxis_height =,
                font_size = 6,
                ClustM = input$clustering_method,
                Rowv=cluster_rows, Colv=cluster_cols)
-      #withProgress(session, {
-      # setProgress(message = "clustering & rendering heatmap, please wait", 
-       #             detail = "This may take a few moments...")
-        ##Look at what expHeatmap does
-       # heatmap_cache$heatmap <- expHeatMap(m,annotation,
-                                            #clustering_distance_rows = input$clustering_distance,
-                                            #clustering_distance_cols = input$clustering_distance,
-         #                                   distM = input$clustering_distance,
-                                            #fontsize_col=fontsize_col, 
-                                            #fontsize_row=fontsize_row,
-                                            #scale=T,
-                                            #clustering_method = input$clustering_method,
-          #                                  ClustM = input$clustering_method,
-                                            #explicit_rownames = fData(m_eset)$explicit_rownames,
-                                            #Rowv=cluster_rows, Colv=cluster_cols)
-                                            #cluster_rows=cluster_rows, cluster_cols=cluster_cols,
-                                            #drawColD=FALSE)
-     # }) #END withProgress
     })
     
   }
