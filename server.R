@@ -250,7 +250,11 @@ shinyServer(
       cluster_rows <- input$cluster_rows
       cluster_cols <- input$cluster_cols
       to_scale <- input$to_scale
-      scale_by <- input$scale_by
+      if (to_scale) {
+        scale_by <- input$scale_by
+      } else {
+        scale_by <- "none"
+      }
       m_eset <- filtered_dataset()
       m <- exprs(m_eset)
       m <- data.matrix(m)
@@ -270,7 +274,7 @@ shinyServer(
                color= input$color_scheme,
                #width =,
                #height =,
-               #scale = to_scale,
+               scale = scale_by,
                probs=input$quantile_number,
                #col_scale=scale_by,
                #colors = "RdYlBu",
