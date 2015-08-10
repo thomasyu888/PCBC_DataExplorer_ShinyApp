@@ -92,12 +92,14 @@ myBody <-dashboardBody(
 
            # Main plot area
           box(width = NULL, solidHeader = TRUE,
-               conditionalPanel("input.show_dt",
-                                DT::dataTableOutput('infotbl')),
+               #conditionalPanel("input.show_dt",
+                #                DT::dataTableOutput('infotbl')),
               
-                conditionalPanel('!input.show_dt & output.heatmap_max < 16000 ',
+               conditionalPanel(#'!input.show_dt & 
+                                'output.heatmap_max < 16000 ',
                                     iHeatmapOutput('infoplot',height=650)),
-                conditionalPanel('!input.show_dt & output.heatmap_max >= 16000',
+               conditionalPanel(#'!input.show_dt & 
+                                'output.heatmap_max >= 16000',
                                       plotOutput("heatmap",height=650))
                                
             )
@@ -114,7 +116,7 @@ myBody <-dashboardBody(
                            choices=c("mRNA", "miRNA", "Methylation"),
                            selectize=T, multiple=F, selected="mRNA"),
                
-               checkboxInput('show_dt', 'Show data values instead of heatmap', value = FALSE),
+               #checkboxInput('show_dt', 'Show data values instead of heatmap', value = FALSE),
                
                uiOutput("plotHelp")               
            ),
@@ -223,13 +225,13 @@ myBody <-dashboardBody(
                           choices=c("Red/Yellow/Blue" = "RdYlBu","Spectral",
                                     "Red/Blue" = "RdBu","Purple/Green"="PRGn","Red/Grey"="RdGy"),
                           selectize=T, multiple=F, selected="Red/Yellow/Blue"),
-               
+              
               checkboxInput('to_scale', 'Scale', value=FALSE),
               conditionalPanel(
                 condition="input.to_scale",
                 selectInput("scale_by", "Scale by",
-                            choices=c("Rows" = FALSE,"Columns" = TRUE),
-                            selectize=T, multiple=F, selected="Rows"))
+                            choices=c("row","column"),
+                            selectize=T, multiple=F))
                
             ),
            
