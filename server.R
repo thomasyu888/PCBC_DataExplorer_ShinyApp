@@ -231,6 +231,7 @@ shinyServer(
      # withProgress(session, {
       #  setProgress(message = "clustering & rendering heatmap, please wait", 
        #             detail = "This may take a few moments...")
+     if (ncol(m)*nrow(m)>16000) {
         heatmap_cache$heatmap <- expHeatMap(m,annotation,
                                             clustering_distance_rows = input$clustering_distance,
                                             clustering_distance_cols = input$clustering_distance,
@@ -241,9 +242,13 @@ shinyServer(
                                             explicit_rownames = fData(m_eset)$explicit_rownames,
                                             cluster_rows=cluster_rows, cluster_cols=cluster_cols,
                                             drawColD=FALSE)
+     } else {
+       return (NULL)
+     }
       #}) #END withProgress
     })
-    
+
+
     output$infoplot <- renderIHeatmap({  
       flog.debug("Making interactive heatmap", name='server')
       
@@ -268,21 +273,18 @@ shinyServer(
       
       fontsize_row <- ifelse(nrow(m) > 100, 0, 8)
       fontsize_col <- ifelse(ncol(m) > 50, 0, 8)    
-      iHeatmap(m,colAnnote = annotation,
-               #rowAnnote =,
-               distM = input$clustering_distance,
-               color= input$color_scheme,
-               #width =,
-               #height =,
-               scale = scale_by,
-               probs=input$quantile_number,
-               #col_scale=scale_by,
-               #colors = "RdYlBu",
-               #yaxis_width =,
-               #xaxis_height =,
-               font_size = 6,
-               ClustM = input$clustering_method,
-               Rowv=cluster_rows, Colv=cluster_cols)
+      if (ncol(m)*nrow(m)<=16000) {
+        iHeatmap(m,colAnnote = annotation,
+                 distM = input$clustering_distance,
+                 color= input$color_scheme,
+                 scale = scale_by,
+                 probs=input$quantile_number,
+                 font_size = 6,
+                 ClustM = input$clustering_method,
+                 Rowv=cluster_rows, Colv=cluster_cols)
+      } else {
+        return (NULL)
+      }
     })
     
   }
