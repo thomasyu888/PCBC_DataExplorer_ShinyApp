@@ -231,7 +231,7 @@ shinyServer(
      # withProgress(session, {
       #  setProgress(message = "clustering & rendering heatmap, please wait", 
        #             detail = "This may take a few moments...")
-     if (ncol(m)*nrow(m)>16000) {
+     if (ncol(m)*nrow(m)>=16000) {
         heatmap_cache$heatmap <- expHeatMap(m,annotation,
                                             clustering_distance_rows = input$clustering_distance,
                                             clustering_distance_cols = input$clustering_distance,
@@ -273,7 +273,7 @@ shinyServer(
       
       fontsize_row <- ifelse(nrow(m) > 100, 0, 8)
       fontsize_col <- ifelse(ncol(m) > 50, 0, 8)    
-      if (ncol(m)*nrow(m)<=16000) {
+      if (ncol(m)*nrow(m)<16000) {
         iHeatmap(m,colAnnote = annotation,
                  distM = input$clustering_distance,
                  color= input$color_scheme,
