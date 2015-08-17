@@ -94,13 +94,9 @@ myBody <-dashboardBody(
           box(width = NULL, solidHeader = TRUE,
                #conditionalPanel("input.show_dt",
                 #                DT::dataTableOutput('infotbl')),
-              
-               conditionalPanel(#'!input.show_dt & 
-                                'output.heatmap_max < 16000 ',
-                                    iHeatmapOutput('infoplot',height=650)),
-               conditionalPanel(#'!input.show_dt & 
-                                'output.heatmap_max >= 16000',
-                                      plotOutput("heatmap",height=650))
+               
+              conditionalPanel("output.heatmap_max < 16000",iHeatmapOutput('infoplot', height=650)),
+              conditionalPanel('output.heatmap_max >= 16000',plotOutput("heatmap",height=650))
                                
             )
            
@@ -201,15 +197,6 @@ myBody <-dashboardBody(
                
                checkboxInput('cluster_rows', 'Cluster the rows', value = TRUE)
                
-#                selectInput("quantile_number", "Quantiles",
-#                            choices=c(100,90,80,70,60,50),
-#                            selectize=T, multiple=F, selected=100),
-#                
-#                selectInput("color_scheme", "Colors",
-#                            choices=c("RdYlBu","Spectral","RdBu","PRGn","RdGy"),
-#                            selectize=T, multiple=F, selected="RdYlBu"),
-#                
-#                checkboxInput('to_scale', 'Scale', value=FALSE)
            ),
            
           # Coloring box
