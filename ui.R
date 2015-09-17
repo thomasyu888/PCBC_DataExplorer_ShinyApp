@@ -22,7 +22,6 @@ mySidebar <- dashboardSidebar(disable=TRUE)
 
 myBody <-dashboardBody(
   fluidRow(
-    verbatimTextOutput("heatmap_max"),
     
     column(width = 9,
            
@@ -33,37 +32,20 @@ myBody <-dashboardBody(
                                title = tagList(shiny::icon("filter", lib = "glyphicon"), "Sample filters"),
                                tags$table(class="table table-condensed",
                                           tags$tr(
-                                            tags$td(selectInput('linetype', h6('Cell Line Type'),
-                                                                choices=unique(combined_metadata$Cell_Line_Type),
-                                                                selectize=T, multiple=T, selected=c('ESC','iPSC'))),
-                                            tags$td(selectInput('vector_type', h6('Reprogramming Vector Type'),
-                                                                choices=unique(combined_metadata$Reprogramming_Vector_Type),
+                                            tags$td(selectInput('linetype', h6('Dataset.Source.ID'),
+                                                                choices=unique(combined_metadata$Dataset.Source.ID),
                                                                 selectize=T, multiple=T)),
-                                            tags$td(selectInput('gene_combination', h6('Reprogramming Gene Combination'),
-                                                                choices=unique(combined_metadata$Reprogramming_Gene_Combination),
+                                            tags$td(selectInput('vector_type', h6('Sample.Tissue'),
+                                                                choices=unique(combined_metadata$Sample.Tissue),
                                                                 selectize=T, multiple=T)),
-                                            tags$td(selectInput('tissue_origin', h6('Tissue of Origin'),
-                                                                choices=unique(combined_metadata$Tissue_of_Origin),
+                                            tags$td(selectInput('gene_combination', h6('Sample.Subtissue.location'),
+                                                                choices=unique(combined_metadata$Sample.Subtissue.location),
                                                                 selectize=T, multiple=T))
-                                          ),
-                                          
-                                          tags$tr(
-                                            tags$td(selectInput('diff_state', h6('Differentiation'),
-                                                                choices=unique(combined_metadata$Diffname_short),
-                                                                selectize=T, multiple=T)),
-                                            tags$td(selectInput('cell_origin', h6('Cell Type of Origin'),
-                                                                choices=unique(combined_metadata$Cell_Type_of_Origin),
-                                                                selectize=T, multiple=T)),
-                                            tags$td(selectInput('gender', h6('Gender'),
-                                                                choices=unique(combined_metadata$Gender),
-                                                                selectize=T, multiple=T)),
-                                            tags$td(selectInput('originating_lab', h6('Originating Lab'),
-                                                                choices=unique(combined_metadata$Originating_Lab),
-                                                                selectize=T, multiple=T))
-                                          )           
+                                          )
                                )
                            )
                     ),
+                                          
                     column(width = 3,
                            
                            # Choose sample labels
@@ -75,7 +57,7 @@ myBody <-dashboardBody(
                                            'Annotate Samples by:',
                                            # -1 to remove the first value "Sample"
                                            choices=colnames(combined_metadata)[-1],
-                                           selected='Diffname_short')
+                                           selected='Dataset.Source.ID')
                            ),
                            
                            # Information on number of features/samples selected
@@ -83,20 +65,15 @@ myBody <-dashboardBody(
                     )                
            ),
 
-           #box(width = NULL, solidHeader = TRUE,
-               #textOutput("infotbl")
-               #DT::dataTableOutput('infotbl')
-
-               #d3heatmapOutput('infoplot'))
-               # plotOutput("plot1", height = 700)
+           
 
            # Main plot area
           box(width = NULL, solidHeader = TRUE,
                #conditionalPanel("input.show_dt",
                 #                DT::dataTableOutput('infotbl')),
                
-              conditionalPanel("output.heatmap_max < 16000",iHeatmapOutput('infoplot', height=650)),
-              conditionalPanel('output.heatmap_max >= 16000',plotOutput("heatmap",height=650))
+
+              plotOutput("heatmap",height=650)
                                
             )
            
@@ -109,7 +86,7 @@ myBody <-dashboardBody(
                title="Select data to display",
                selectInput("plotdisplay",
                            label=NULL, #h6(""),
-                           choices=c("mRNA", "miRNA", "Methylation"),
+                           choices=c("mRNA"),
                            selectize=T, multiple=F, selected="mRNA"),
                
                #checkboxInput('show_dt', 'Show data values instead of heatmap', value = FALSE),
@@ -131,21 +108,21 @@ myBody <-dashboardBody(
                   tabPanel("Pathway", 
                            selectInput("selected_pathways", label=NULL,
                                        choices = names(pathways_list),
-                                       selectize=T, multiple=F)),
-                  tabPanel("miRNA", 
-                           tags$textarea(paste0(sample_miRNAs, collapse="\n"),
-                                         rows=5, id="custom_mirna_list", style="width: 100%"),
-                           p(class = "text-muted",
-                             "This is an example note in a muted text color."),
-                           
-                           actionButton("refreshmiRNA", "Refresh")),
+                                       selectize=T, multiple=F))
+                  #tabPanel("miRNA", 
+                   #        tags$textarea(paste0(sample_miRNAs, collapse="\n"),
+                    #                     rows=5, id="custom_mirna_list", style="width: 100%"),
+                     #      p(class = "text-muted",
+                      #       "This is an example note in a muted text color."),
+                       #    
+                        #   actionButton("refreshmiRNA", "Refresh")),
                   
-                  tabPanel("Methylation", 
-                           tags$textarea(paste0(sample_methyl, collapse="\n"),
-                                         rows=5, id="custom_methyl_list", style="width: 100%"),
-                           p(class = "text-muted",
-                             "This is an example note in a muted text color."),
-                           actionButton("refreshMethyl", "Refresh"))
+                #  tabPanel("Methylation", 
+                 #          tags$textarea(paste0(sample_methyl, collapse="\n"),
+                  #                       rows=5, id="custom_methyl_list", style="width: 100%"),
+                   #        p(class = "text-muted",
+                    #         "This is an example note in a muted text color."),
+                     #      actionButton("refreshMethyl", "Refresh"))
            ),
            
            # Correlation box
@@ -189,7 +166,7 @@ myBody <-dashboardBody(
                
                # set the clustering method
                selectInput("clustering_method", "Clustering Method",
-                           choices=c("ward"="ward.D2", "single", "complete", "average", 
+                           choices=c("ward", "single", "complete", "average", 
                                      "mcquitty", "median", "centroid"),
                            selectize=T, multiple=F, selected="average"),
                

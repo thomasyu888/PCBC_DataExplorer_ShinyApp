@@ -59,10 +59,10 @@ shinyServer(
       ds <- dataset()
       ds_filtered <- filter_by_metadata(input, ds)
       flog.debug(sprintf("filtered ds dims: %s", dim(ds_filtered)), name="server")
-      user_feats <- user_submitted_features()
-      feats <- intersect(user_feats, featureNames(ds_filtered))
-      flog.debug(sprintf("# features in common: %s", length(feats)), name="server")
-      ds_filtered <- ds_filtered[feats, ]
+      #user_feats <- user_submitted_features()
+      #feats <- intersect(user_feats, featureNames(ds_filtered))
+      # flog.debug(sprintf("# features in common: %s", length(feats)), name="server")
+      # ds_filtered <- ds_filtered[feats, ]
       
       if (input$incl_corr_genes == 'TRUE' & input$plotdisplay == 'mRNA' & 
             input$custom_search %in% c("Gene", "Pathway")) { 
@@ -78,7 +78,7 @@ shinyServer(
       
       ds_filtered
     })
-
+    
     
     output$infotbl <- DT::renderDataTable({
       ds <- filtered_dataset()
@@ -91,8 +91,8 @@ shinyServer(
                       pageLength = 15,
                       scrollX = TRUE,
                       scrollCollapse = TRUE))
-     })
-
+    })
+    
     # prepare data for download
     output$download_data <- downloadHandler(
       filename = function() {'PCBC_data.csv'},
@@ -105,93 +105,93 @@ shinyServer(
       }
     )
     
-    user_submitted_features <- reactive({
-      if (input$custom_search == "Gene") {
-        input$refreshGene
-      }
-      else if(input$custom_search == "miRNA") {
-        input$refreshmiRNA
-      }
-      else if(input$custom_search == "Methylation") {
-        input$refreshMethyl
-      }
-      
-      geneList <- isolate(input$custom_input_list)
-      selectedPathway <- isolate(input$selected_pathways)
-      mirnaList <- isolate(input$custom_mirna_list)
-      methylList <- isolate(input$custom_methyl_list)
-      
-      curr_filter_type <- paste(input$custom_search, input$plotdisplay, sep="_")
-      flog.debug(curr_filter_type, name="server")
-      
-      if (curr_filter_type == "Gene_mRNA") {
-        featureList <- clean_list(geneList, change_case=toupper)
-        featureList <- convert_to_ensemblIds(featureList)
-      }
-      else if (curr_filter_type == "Pathway_mRNA") {
-        featureList <- as.character(unlist(pathways_list[selectedPathway]))
-        featureList <- clean_list(featureList, change_case=toupper)
-        featureList <- convert_to_ensemblIds(featureList)
-      }
-      else if (curr_filter_type == "Gene_miRNA") {
-        featureList <- clean_list(geneList, change_case=toupper)
-        featureList <- convert_to_ensemblIds(featureList)
-        selected_miRNAs <- filter(miRNA_to_genes, GeneID %in% featureList)
-        featureList <- unique(selected_miRNAs$original)
-      }
-      else if (curr_filter_type == "Pathway_miRNA") {
-        featureList <- as.character(unlist(pathways_list[selectedPathway]))
-        featureList <- clean_list(featureList, change_case=toupper)
-        featureList <- convert_to_ensemblIds(featureList)
-        selected_miRNAs <- filter(miRNA_to_genes, GeneID %in% featureList)
-        featureList <- unique(selected_miRNAs$original)
-      }
-      else if(curr_filter_type == "miRNA_miRNA") {
-        featureList <- clean_list(mirnaList, change_case=tolower)
-        selected_miRNAs <- filter(miRNA_to_genes, miRNAPrecursor %in% featureList | miRNA1 %in% featureList | 
-                                    miRNA2 %in% featureList)
-        featureList <- unique(selected_miRNAs$original)
-      }
-      else if(curr_filter_type == "miRNA_mRNA") {
-        featureList <- clean_list(mirnaList, change_case=tolower)
-        selected_miRNAs <- filter(miRNA_to_genes, miRNAPrecursor %in% featureList | miRNA1 %in% featureList | 
-                                    miRNA2 %in% featureList)
-        featureList <- unique(selected_miRNAs$GeneID)
-      }
-      else if (curr_filter_type == "Gene_Methylation") {
-        featureList <- clean_list(geneList, change_case=toupper)
-        featureList <- convert_to_EntrezIds(featureList)
-        flt_res <- filter(meth_to_gene, entrezID %in% featureList)
-        featureList <- unique(flt_res$methProbeID)
-      }
-      else if (curr_filter_type == "miRNA_Methylation") {
-        featureList <- clean_list(mirnaList, change_case=tolower)
-        selected_miRNAs <- filter(miRNA_to_genes, miRNAPrecursor %in% featureList | miRNA1 %in% featureList | 
-                                    miRNA2 %in% featureList)
-        featureList <- unique(selected_miRNAs$GeneID)
-        featureList <- convert_to_EntrezIds(featureList)
-        flt_res <- filter(meth_to_gene, entrezID %in% featureList)
-        featureList <- unique(flt_res$methProbeID)
-      }
-      else if (curr_filter_type == "Methylation_Methylation") {
-        featureList <- clean_list(methylList, change_case=tolower)
-        print(featureList)
-      }
-      else if (curr_filter_type == "Methylation_mRNA") {
-        featureList <- clean_list(methylList, change_case=tolower)
-        flt_res <- filter(meth_to_gene, methProbeID %in% featureList)
-        featureList <- unique(flt_res$entrezID)
-        featureList <- convert_to_ensemblIds(featureList)
-      }
-      else {
-        featureList <- c()
-      }
-      
-      flog.debug(sprintf("In %s, selected %s features", curr_filter_type, length(featureList)), name="server")
-      
-      featureList
-    })
-   
+    #     user_submitted_features <- reactive({
+    #       if (input$custom_search == "Gene") {
+    #         input$refreshGene
+    #       }
+    #       else if(input$custom_search == "miRNA") {
+    #         input$refreshmiRNA
+    #       }
+    #       else if(input$custom_search == "Methylation") {
+    #         input$refreshMethyl
+    #       }
+    #       
+    #       geneList <- isolate(input$custom_input_list)
+    #       selectedPathway <- isolate(input$selected_pathways)
+    #       mirnaList <- isolate(input$custom_mirna_list)
+    #       methylList <- isolate(input$custom_methyl_list)
+    #       
+    #       curr_filter_type <- paste(input$custom_search, input$plotdisplay, sep="_")
+    #       flog.debug(curr_filter_type, name="server")
+    #       
+    #       if (curr_filter_type == "Gene_mRNA") {
+    #         featureList <- clean_list(geneList, change_case=toupper)
+    #         featureList <- convert_to_ensemblIds(featureList)
+    #       }
+    #       else if (curr_filter_type == "Pathway_mRNA") {
+    #         featureList <- as.character(unlist(pathways_list[selectedPathway]))
+    #         featureList <- clean_list(featureList, change_case=toupper)
+    #         featureList <- convert_to_ensemblIds(featureList)
+    #       }
+    #       else if (curr_filter_type == "Gene_miRNA") {
+    #         featureList <- clean_list(geneList, change_case=toupper)
+    #         featureList <- convert_to_ensemblIds(featureList)
+    #         selected_miRNAs <- filter(miRNA_to_genes, GeneID %in% featureList)
+    #         featureList <- unique(selected_miRNAs$original)
+    #       }
+    #       else if (curr_filter_type == "Pathway_miRNA") {
+    #         featureList <- as.character(unlist(pathways_list[selectedPathway]))
+    #         featureList <- clean_list(featureList, change_case=toupper)
+    #         featureList <- convert_to_ensemblIds(featureList)
+    #         selected_miRNAs <- filter(miRNA_to_genes, GeneID %in% featureList)
+    #         featureList <- unique(selected_miRNAs$original)
+    #       }
+    #       else if(curr_filter_type == "miRNA_miRNA") {
+    #         featureList <- clean_list(mirnaList, change_case=tolower)
+    #         selected_miRNAs <- filter(miRNA_to_genes, miRNAPrecursor %in% featureList | miRNA1 %in% featureList | 
+    #                                     miRNA2 %in% featureList)
+    #         featureList <- unique(selected_miRNAs$original)
+    #       }
+    #       else if(curr_filter_type == "miRNA_mRNA") {
+    #         featureList <- clean_list(mirnaList, change_case=tolower)
+    #         selected_miRNAs <- filter(miRNA_to_genes, miRNAPrecursor %in% featureList | miRNA1 %in% featureList | 
+    #                                     miRNA2 %in% featureList)
+    #         featureList <- unique(selected_miRNAs$GeneID)
+    #       }
+    #       else if (curr_filter_type == "Gene_Methylation") {
+    #         featureList <- clean_list(geneList, change_case=toupper)
+    #         featureList <- convert_to_EntrezIds(featureList)
+    #         flt_res <- filter(meth_to_gene, entrezID %in% featureList)
+    #         featureList <- unique(flt_res$methProbeID)
+    #       }
+    #       else if (curr_filter_type == "miRNA_Methylation") {
+    #         featureList <- clean_list(mirnaList, change_case=tolower)
+    #         selected_miRNAs <- filter(miRNA_to_genes, miRNAPrecursor %in% featureList | miRNA1 %in% featureList | 
+    #                                     miRNA2 %in% featureList)
+    #         featureList <- unique(selected_miRNAs$GeneID)
+    #         featureList <- convert_to_EntrezIds(featureList)
+    #         flt_res <- filter(meth_to_gene, entrezID %in% featureList)
+    #         featureList <- unique(flt_res$methProbeID)
+    #       }
+    #       else if (curr_filter_type == "Methylation_Methylation") {
+    #         featureList <- clean_list(methylList, change_case=tolower)
+    #         print(featureList)
+    #       }
+    #       else if (curr_filter_type == "Methylation_mRNA") {
+    #         featureList <- clean_list(methylList, change_case=tolower)
+    #         flt_res <- filter(meth_to_gene, methProbeID %in% featureList)
+    #         featureList <- unique(flt_res$entrezID)
+    #         featureList <- convert_to_ensemblIds(featureList)
+    #       }
+    #       else {
+    #         featureList <- c()
+    #       }
+    #       
+    #       flog.debug(sprintf("In %s, selected %s features", curr_filter_type, length(featureList)), name="server")
+    #       
+    #       featureList
+    #     })
+    
     output$featxsamples <- renderInfoBox({
       ds <- filtered_dataset()
       infoBox(title="Features x Samples", 
@@ -201,13 +201,13 @@ shinyServer(
     
     heatmap_cache <- reactiveValues()
     
-    output$heatmap_max <- renderText({
-      m_eset <- filtered_dataset()
-      m <- exprs(m_eset)
-      m <- data.matrix(m)
-      return(ncol(m)*nrow(m))
-    })
-#     #return the heatmap plot
+    #output$heatmap_max <- renderText({
+    # m_eset <- filtered_dataset()
+    #  m <- exprs(m_eset)
+    #  m <- data.matrix(m)
+    #  return(ncol(m)*nrow(m))
+    #  })
+    #     #return the heatmap plot
     output$heatmap <- renderPlot({  
       flog.debug("Making static heatmap", name='server')
       
@@ -220,7 +220,7 @@ shinyServer(
       
       validate( need( ncol(m) != 0, "Filtered matrix contains 0 Samples.") )
       validate( need( nrow(m) != 0, "Filtered matrix contains 0 features.") )
-      validate( need(nrow(m) < 10000, "Filtered matrix contains > 10000 genes.") )
+      #validate( need(nrow(m) < 10000, "Filtered matrix contains > 10000 genes.") )
       
       filtered_metadata <- pData(m_eset)
       annotation <- get_heatmapAnnotation(input$heatmap_annotation_labels, filtered_metadata)
@@ -230,62 +230,23 @@ shinyServer(
       
      # withProgress(session, {
       #  setProgress(message = "clustering & rendering heatmap, please wait", 
-       #             detail = "This may take a few moments...")
-     if (ncol(m)*nrow(m)>=16000) {
-        heatmap_cache$heatmap <- expHeatMap(m,annotation,
+          #          detail = "This may take a few moments...")
+        
+        heatmap_cache$heatmap <- expHeatMap(m, annotation,
                                             clustering_distance_rows = input$clustering_distance,
                                             clustering_distance_cols = input$clustering_distance,
                                             fontsize_col=fontsize_col, 
                                             fontsize_row=fontsize_row,
                                             scale=T,
                                             clustering_method = input$clustering_method,
-                                            explicit_rownames = fData(m_eset)$explicit_rownames,
+                                            #explicit_rownames = fData(m_eset)$explicit_rownames,
                                             cluster_rows=cluster_rows, cluster_cols=cluster_cols,
                                             drawColD=FALSE)
-     } else {
-       return (NULL)
-     }
-      #}) #END withProgress
+        
+     # }) #END withProgress
+      
     })
-
-
-    output$infoplot <- renderIHeatmap({  
-      flog.debug("Making interactive heatmap", name='server')
-      
-      cluster_rows <- input$cluster_rows
-      cluster_cols <- input$cluster_cols
-      to_scale <- input$to_scale
-      if (to_scale) {
-        scale_by <- input$scale_by
-      } else {
-        scale_by <- "none"
-      }
-      m_eset <- filtered_dataset()
-      m <- exprs(m_eset)
-      m <- data.matrix(m)
-      
-      validate( need( ncol(m) != 0, "Filtered matrix contains 0 Samples.") )
-      validate( need( nrow(m) != 0, "Filtered matrix contains 0 features.") )
-      validate( need(nrow(m) < 10000, "Filtered matrix contains > 10000 genes.") )
-      
-      filtered_metadata <- pData(m_eset)
-      annotation <- get_heatmapAnnotation(input$heatmap_annotation_labels, filtered_metadata)
-      
-      fontsize_row <- ifelse(nrow(m) > 100, 0, 8)
-      fontsize_col <- ifelse(ncol(m) > 50, 0, 8)    
-      if (ncol(m)*nrow(m)<16000) {
-        iHeatmap(m,colAnnote = annotation,
-                 distM = input$clustering_distance,
-                 color= input$color_scheme,
-                 scale = scale_by,
-                 probs=input$quantile_number,
-                 font_size = 6,
-                 ClustM = input$clustering_method,
-                 Rowv=cluster_rows, Colv=cluster_cols)
-      } else {
-        return (NULL)
-      }
-    })
+    
     
   }
 )
