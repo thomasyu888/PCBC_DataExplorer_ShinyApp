@@ -64,13 +64,13 @@ shinyServer(
       # flog.debug(sprintf("# features in common: %s", length(feats)), name="server")
       # ds_filtered <- ds_filtered[feats, ]
       
-      if (input$incl_corr_genes == 'TRUE' & input$plotdisplay == 'mRNA' & 
-            input$custom_search %in% c("Gene", "Pathway")) { 
-        
-        ds_filtered <- get_eset_withcorrelated_genes(feats, dataset(),
-                                                     input$corr_threshold,
-                                                     input$correlation_direction)
-      }
+#       if (input$incl_corr_genes == 'TRUE' & input$plotdisplay == 'mRNA' & 
+#             input$custom_search %in% c("Gene", "Pathway")) { 
+#         
+#         ds_filtered <- get_eset_withcorrelated_genes(feats, dataset(),
+#                                                      input$corr_threshold,
+#                                                      input$correlation_direction)
+#       }
       
       # zero variance filter
       rows_to_keep <- apply(exprs(ds_filtered), 1, var) > 0
