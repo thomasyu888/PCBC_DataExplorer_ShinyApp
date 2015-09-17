@@ -56,7 +56,7 @@ myBody <-dashboardBody(
                                selectInput('heatmap_annotation_labels',
                                            'Annotate Samples by:',
                                            # -1 to remove the first value "Sample"
-                                           choices=colnames(combined_metadata)[-1],
+                                           choices=colnames(combined_metadata)[colnames(combined_metadata)!="Sample"],
                                            selected='Dataset.Source.ID')
                            ),
                            
@@ -126,33 +126,33 @@ myBody <-dashboardBody(
            ),
            
            # Correlation box
-           box(width = NULL, status = "warning", solidHeader=TRUE, 
-               collapsible=TRUE, collapsed=TRUE,
-               title = tagList(shiny::icon("plus-sign", lib="glyphicon"), "Correlation"),               
-               conditionalPanel('input.plotdisplay != "mRNA"',
-                                "Not available."),
-               
-               conditionalPanel('input.plotdisplay == "mRNA"',
-                                checkboxInput('incl_corr_genes', 
-                                              'also include correlated genes', 
-                                              value = FALSE),
-                                
-                                conditionalPanel(
-                                  condition="input.incl_corr_genes",
-                                  sliderInput('corr_threshold', label=h6('Correlation Threshold'),
-                                              min=0.5, max=1.0, value=0.9, step=0.05),
-                                  # correlation direction
-                                  selectInput("correlation_direction",
-                                              label=h6("Correlation Direction"),
-                                              choices=c("both", "positive", "negative"),
-                                              selectize=T, multiple=F, selected="both"),
-                                  p(class = "text-muted",
-                                    br(),
-                                    "This is an example note in a muted text color."
-                                  )
-                                )
-               )
-           ),
+#           box(width = NULL, status = "warning", solidHeader=TRUE, 
+#               collapsible=TRUE, collapsed=TRUE,
+#               title = tagList(shiny::icon("plus-sign", lib="glyphicon"), "Correlation"),               
+#               conditionalPanel('input.plotdisplay != "mRNA"',
+#                                "Not available."),
+#                
+#               conditionalPanel('input.plotdisplay == "mRNA"',
+#                                checkboxInput('incl_corr_genes', 
+#                                              'also include correlated genes', 
+#                                              value = FALSE),
+#                                 
+#                                 conditionalPanel(
+#                                  condition="input.incl_corr_genes",
+#                                  sliderInput('corr_threshold', label=h6('Correlation Threshold'),
+#                                              min=0.5, max=1.0, value=0.9, step=0.05),
+#                                   correlation direction
+#                                  selectInput("correlation_direction",
+#                                              label=h6("Correlation Direction"),
+#                                              choices=c("both", "positive", "negative"),
+#                                              selectize=T, multiple=F, selected="both"),
+#                                  p(class = "text-muted",
+#                                    br(),
+#                                    "This is an example note in a muted text color."
+#                                  )
+#                                )
+#               )
+#            ),
            
            # Clustering box
            box(width = NULL, status = "warning", solidHeader=TRUE, 
@@ -177,27 +177,27 @@ myBody <-dashboardBody(
            ),
            
           # Coloring box
-          box(width = NULL, status = "warning", solidHeader=TRUE, 
-              collapsible=TRUE, collapsed=TRUE,
-              title = tagList(shiny::icon("wrench", lib="glyphicon"), "Colors"),
+#           box(width = NULL, status = "warning", solidHeader=TRUE, 
+#               collapsible=TRUE, collapsed=TRUE,
+#               title = tagList(shiny::icon("wrench", lib="glyphicon"), "Colors"),
               # select quantiles
-              selectInput("quantile_number", "Quantiles",
-                          choices=c("0-100%"=100,"10-90%"=90,"20-80%"=80,"30-70%"=70,"40-60%"=60,"50-50%"=50),
-                          selectize=T, multiple=F, selected=100),
-               
-              selectInput("color_scheme", "Colors",
-                          choices=c("Red/Yellow/Blue" = "RdYlBu","Spectral",
-                                    "Red/Blue" = "RdBu","Purple/Green"="PRGn","Red/Grey"="RdGy"),
-                          selectize=T, multiple=F, selected="Red/Yellow/Blue"),
+#               selectInput("quantile_number", "Quantiles",
+#                           choices=c("0-100%"=100,"10-90%"=90,"20-80%"=80,"30-70%"=70,"40-60%"=60,"50-50%"=50),
+#                           selectize=T, multiple=F, selected=100),
+#                
+#               selectInput("color_scheme", "Colors",
+#                           choices=c("Red/Yellow/Blue" = "RdYlBu","Spectral",
+#                                     "Red/Blue" = "RdBu","Purple/Green"="PRGn","Red/Grey"="RdGy"),
+#                           selectize=T, multiple=F, selected="Red/Yellow/Blue"),
               
-              checkboxInput('to_scale', 'Scale', value=FALSE),
-              conditionalPanel(
-                condition="input.to_scale",
-                selectInput("scale_by", "Scale by",
-                            choices=c("row","column"),
-                            selectize=T, multiple=F))
-               
-            ),
+#               checkboxInput('to_scale', 'Scale', value=FALSE),
+#               conditionalPanel(
+#                 condition="input.to_scale",
+#                 selectInput("scale_by", "Scale by",
+#                             choices=c("row","column"),
+#                             selectize=T, multiple=F))
+#                
+#             ),
            
            # Download box
            box(width=NULL, status = 'info', solidHeader=TRUE,
