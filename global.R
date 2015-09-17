@@ -77,13 +77,15 @@ if (use_cache) {
   flog.debug("Using cached data loaded from Synapse", name="server")
 } else {
   # Use only these metadata columns
-  metadataColsToUse <- c("Cell_Line_Type", "Reprogramming_Gene_Combination", 
-                         "Reprogramming_Vector_Type", "Tissue_of_Origin", "Diffname_short",
-                         "Cell_Type_of_Origin", "Gender", "Originating_Lab_ID",
-                         "Cell_Line_of_Origin", "Donor_ID", "Originating_Lab", "Cell_Type",
-                         "Culture_Conditions")
-  # metadataColsToUse <- c("Cell_Line_Type")
-  metadataIdCol <- "UID"
+#   metadataColsToUse <- c("Cell_Line_Type", "Reprogramming_Gene_Combination", 
+#                          "Reprogramming_Vector_Type", "Tissue_of_Origin", "Diffname_short",
+#                          "Cell_Type_of_Origin", "Gender", "Originating_Lab_ID",
+#                          "Cell_Line_of_Origin", "Donor_ID", "Originating_Lab", "Cell_Type",
+#                         "Culture_Conditions")
+#   metadataIdCol <- "UID"
+  metadataColsToUse <- c("Dataset.Source.ID", "Sample.Tissue", 
+                         "Sample.Subtissue.location")
+  metadataIdCol <- "Sample.ID"
   
   #get the MSigDB data
   source("msigdb_data_prep.R")
@@ -92,13 +94,13 @@ if (use_cache) {
   source("mRNA_data_prep.R")
   
   #get the miRNA expression data
-  source("miRNA_data_prep.R")
+  #source("miRNA_data_prep.R")
   
   #get the methylation data
-  source("methylation_data_prep.R")
+  #source("methylation_data_prep.R")
   
   #prepare single global metadata
-  combined_metadata <- rbind(mRNA_metadata, miRNA_metadata, meth_metadata, deparse.level = 0)
+  combined_metadata <- mRNA_metadata
   
   # Sample column required for expression matrix filtering
   combined_metadata$Sample <- rownames(combined_metadata)
