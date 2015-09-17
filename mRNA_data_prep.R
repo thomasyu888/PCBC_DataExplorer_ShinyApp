@@ -3,42 +3,51 @@
 ###
 
 flog.info('Reading the PCBC normalized mRNA Exp data from Synapse', name='synapse')
-mRNA_NormCounts <- synGet('syn2701943')
+
+#mRNA_NormCounts <- synGet('syn2701943')
+#TreeOfLife
+mRNA_NormCounts <- synGet('syn3546481')
 
 #read in the file
 mRNA_NormCounts <- read.delim(mRNA_NormCounts@filePath, header=T, sep='\t',
                               as.is=T, stringsAsFactors = F, check.names=F)
+#mRNA_NormCounts<- mRNA_NormCounts[c(1:200),]
 
 ## remove version from ENSEMBL ID
-rownames(mRNA_NormCounts) <- gsub('\\..*', '',mRNA_NormCounts$tracking_id)
-mRNA_NormCounts$symbol <- NULL
-mRNA_NormCounts$tracking_id <- NULL
-mRNA_NormCounts$locus <- NULL
+#rownames(mRNA_NormCounts) <- gsub('\\..*', '',mRNA_NormCounts$tracking_id)
+rownames(mRNA_NormCounts) <- mRNA_NormCounts$samples
+mRNA_NormCounts$samples <- NULL
+
+#mRNA_NormCounts$symbol <- NULL
+#mRNA_NormCounts$tracking_id <- NULL
+#mRNA_NormCounts$locus <- NULL
 
 ###
 #get the metadata from synapse for PCBC geneExp samples
 ###
 flog.info('Reading the PCBC mRNA metadata from Synapse', name='synapse')
-mRNAQuery <- sprintf("select %s from syn3156503",
-                     paste(c(metadataIdCol, metadataColsToUse), collapse=","))
-mRNAMetadataTable <- synTableQuery(mRNAQuery)
-mRNA_metadata <- mRNAMetadataTable@values
+
+mRNAMeta <- synGet("syn3555917")
+mRNAMeta <- read.csv(mRNAMeta@filePath)
+
+mRNA_metadata<- mRNAMeta[c(metadataIdCol, metadataColsToUse)]
+
 rownames(mRNA_metadata) <- mRNA_metadata[, metadataIdCol]
 mRNA_metadata[, metadataIdCol] <- NULL
+mRNA_metadata$Sample.Tissue <- tolower(mRNA_metadata$Sample.Tissue)
+mRNA_metadata$Sample.Subtissue.location <- tolower(mRNA_metadata$Sample.Subtissue.location)
 
 ## Only keep samples in both
 mrna_in_common <- intersect(rownames(mRNA_metadata), colnames(mRNA_NormCounts))
 mRNA_metadata <- mRNA_metadata[mrna_in_common, ]
 mRNA_NormCounts <- mRNA_NormCounts[, mrna_in_common]
 
-explicit_rownames = hg19_annot %>%
-  filter(ENSEMBL %in% rownames(mRNA_NormCounts)) %>%
-  group_by(ENSEMBL) %>%
-  summarise(SYMBOL = unique(SYMBOL)[1])
 
-mRNA_features <- explicit_rownames[match(rownames(mRNA_NormCounts), explicit_rownames$ENSEMBL), ]
-mRNA_features <- transform(mRNA_features, explicit_rownames=SYMBOL)
+  
+mRNA_features<-  data.frame(explicit_rownames = rownames(mRNA_NormCounts))
 rownames(mRNA_features) <- rownames(mRNA_NormCounts)
+
+sample_gene_list <- rownames(mRNA_NormCounts)
 
 eset.mRNA <- ExpressionSet(assayData=as.matrix(mRNA_NormCounts),
                            phenoData=AnnotatedDataFrame(mRNA_metadata),
