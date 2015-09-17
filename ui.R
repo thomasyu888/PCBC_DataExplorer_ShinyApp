@@ -32,13 +32,13 @@ myBody <-dashboardBody(
                                title = tagList(shiny::icon("filter", lib = "glyphicon"), "Sample filters"),
                                tags$table(class="table table-condensed",
                                           tags$tr(
-                                            tags$td(selectInput('linetype', h6('Dataset.Source.ID'),
+                                            tags$td(selectInput('linetype', h6('Dataset Source ID'),
                                                                 choices=unique(combined_metadata$Dataset.Source.ID),
                                                                 selectize=T, multiple=T)),
-                                            tags$td(selectInput('vector_type', h6('Sample.Tissue'),
+                                            tags$td(selectInput('vector_type', h6('Sample Tissue'),
                                                                 choices=unique(combined_metadata$Sample.Tissue),
                                                                 selectize=T, multiple=T)),
-                                            tags$td(selectInput('gene_combination', h6('Sample.Subtissue.location'),
+                                            tags$td(selectInput('gene_combination', h6('Sample Subtissue location'),
                                                                 choices=unique(combined_metadata$Sample.Subtissue.location),
                                                                 selectize=T, multiple=T))
                                           )
@@ -57,7 +57,7 @@ myBody <-dashboardBody(
                                            'Annotate Samples by:',
                                            # -1 to remove the first value "Sample"
                                            choices=colnames(combined_metadata)[colnames(combined_metadata)!="Sample"],
-                                           selected='Dataset.Source.ID')
+                                           selected='Sample.Tissue')
                            ),
                            
                            # Information on number of features/samples selected
