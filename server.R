@@ -32,24 +32,25 @@ shinyServer(
     })
     
     filter_type_help <- reactive({
-      curr_filter_type <- paste(input$custom_search, input$plotdisplay, sep="_")
+      #curr_filter_type <- paste(input$custom_search, input$plotdisplay, sep="_")
+      curr_filter_type <- paste(input$custom_search, "mRNA", sep="_")
       
       switch(curr_filter_type,
              Gene_mRNA="Plotting selected genes.",
              Pathway_mRNA="Plotting selected genes.",
-             miRNA_mRNA="Plotting genes targeted by selected miRNAs.",
+             #miRNA_mRNA="Plotting genes targeted by selected miRNAs.",
              
-             Gene_miRNA="Plotting miRNAs targeting selected genes.",
-             Pathway_miRNA="Plotting miRNAs targeting selected genes.",
-             miRNA_miRNA="Plotting selected miRNAs.",
-             
-             Gene_Methylation="Plotting methylation probes targeting selected genes.",
-             Pathway_Methylation="Plotting methylation probes targeting selected genes.",
-             miRNA_Methylation="Plotting methylation probes for genes targeted by selected miRNAs.",
-             
-             Methylation_Methylation="Plotting methylation probes.",
-             Methylation_mRNA="Plotting genes targeted by methylation probes.",
-             
+#              Gene_miRNA="Plotting miRNAs targeting selected genes.",
+#              Pathway_miRNA="Plotting miRNAs targeting selected genes.",
+#              miRNA_miRNA="Plotting selected miRNAs.",
+#              
+#              Gene_Methylation="Plotting methylation probes targeting selected genes.",
+#              Pathway_Methylation="Plotting methylation probes targeting selected genes.",
+#              miRNA_Methylation="Plotting methylation probes for genes targeted by selected miRNAs.",
+#              
+#              Methylation_Methylation="Plotting methylation probes.",
+#              Methylation_mRNA="Plotting genes targeted by methylation probes.",
+#              
              "Unknown selection.")
       
     })  
@@ -59,10 +60,10 @@ shinyServer(
       ds <- eset.mRNA
       ds_filtered <- filter_by_metadata(input, ds)
       flog.debug(sprintf("filtered ds dims: %s", dim(ds_filtered)), name="server")
-      #user_feats <- user_submitted_features()
-      #feats <- intersect(user_feats, featureNames(ds_filtered))
-      # flog.debug(sprintf("# features in common: %s", length(feats)), name="server")
-      # ds_filtered <- ds_filtered[feats, ]
+      user_feats <- user_submitted_features()
+      feats <- intersect(user_feats, featureNames(ds_filtered))
+      flog.debug(sprintf("# features in common: %s", length(feats)), name="server")
+      ds_filtered <- ds_filtered[feats, ]
       
 #       if (input$incl_corr_genes == 'TRUE' & input$plotdisplay == 'mRNA' & 
 #             input$custom_search %in% c("Gene", "Pathway")) { 
@@ -105,10 +106,10 @@ shinyServer(
       }
     )
     
-    #     user_submitted_features <- reactive({
-    #       if (input$custom_search == "Gene") {
-    #         input$refreshGene
-    #       }
+         user_submitted_features <- reactive({
+           if (input$custom_search == "Gene") {
+             input$refreshGene
+           }
     #       else if(input$custom_search == "miRNA") {
     #         input$refreshmiRNA
     #       }
@@ -116,23 +117,23 @@ shinyServer(
     #         input$refreshMethyl
     #       }
     #       
-    #       geneList <- isolate(input$custom_input_list)
-    #       selectedPathway <- isolate(input$selected_pathways)
+           geneList <- isolate(input$custom_input_list)
+           selectedPathway <- isolate(input$selected_pathways)
     #       mirnaList <- isolate(input$custom_mirna_list)
     #       methylList <- isolate(input$custom_methyl_list)
     #       
-    #       curr_filter_type <- paste(input$custom_search, input$plotdisplay, sep="_")
-    #       flog.debug(curr_filter_type, name="server")
+           curr_filter_type <- paste(input$custom_search, "mRNA", sep="_")
+           flog.debug(curr_filter_type, name="server")
     #       
-    #       if (curr_filter_type == "Gene_mRNA") {
-    #         featureList <- clean_list(geneList, change_case=toupper)
-    #         featureList <- convert_to_ensemblIds(featureList)
-    #       }
-    #       else if (curr_filter_type == "Pathway_mRNA") {
-    #         featureList <- as.character(unlist(pathways_list[selectedPathway]))
-    #         featureList <- clean_list(featureList, change_case=toupper)
-    #         featureList <- convert_to_ensemblIds(featureList)
-    #       }
+           if (curr_filter_type == "Gene_mRNA") {
+             featureList <- clean_list(geneList, change_case=toupper)
+             #featureList <- convert_to_ensemblIds(featureList)
+           }
+           else if (curr_filter_type == "Pathway_mRNA") {
+             featureList <- as.character(unlist(pathways_list[selectedPathway]))
+             featureList <- clean_list(featureList, change_case=toupper)
+            # featureList <- convert_to_ensemblIds(featureList)
+           }
     #       else if (curr_filter_type == "Gene_miRNA") {
     #         featureList <- clean_list(geneList, change_case=toupper)
     #         featureList <- convert_to_ensemblIds(featureList)
@@ -183,14 +184,14 @@ shinyServer(
     #         featureList <- unique(flt_res$entrezID)
     #         featureList <- convert_to_ensemblIds(featureList)
     #       }
-    #       else {
-    #         featureList <- c()
-    #       }
+           else {
+             featureList <- c()
+           }
     #       
-    #       flog.debug(sprintf("In %s, selected %s features", curr_filter_type, length(featureList)), name="server")
-    #       
-    #       featureList
-    #     })
+           flog.debug(sprintf("In %s, selected %s features", curr_filter_type, length(featureList)), name="server")
+           
+           featureList
+         })
     
     output$featxsamples <- renderInfoBox({
       ds <- filtered_dataset()
