@@ -46,9 +46,10 @@ mRNAMeta <- read.csv(mRNAMeta@filePath)
 mRNA_metadata<- mRNAMeta[c(metadataIdCol, metadataColsToUse)]
 
 rownames(mRNA_metadata) <- mRNA_metadata[, metadataIdCol]
-mRNA_metadata[, metadataIdCol] <- NULL
+#mRNA_metadata[, metadataIdCol] <- NULL
 mRNA_metadata$Sample.Tissue <- tolower(mRNA_metadata$Sample.Tissue)
-mRNA_metadata$Sample.Subtissue.location <- tolower(mRNA_metadata$Sample.Subtissue.location)
+mRNA_metadata$Sample.Developmental.Sage <- tolower(mRNA_metadata$Sample.Developmental.Sage)
+
 
 ## Only keep samples in both
 mrna_in_common <- intersect(rownames(mRNA_metadata), colnames(mRNA_NormCounts))

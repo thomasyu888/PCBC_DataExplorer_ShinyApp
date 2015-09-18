@@ -89,58 +89,67 @@ get_expMatrix_withcorrelated_genes <- function(geneIds, expMatrix, corThreshold,
 get_filtered_metadata <- function(input, metadata){
   filtered_metadata <- metadata
   
-  if( length(input$linetype) != 0 ){
-    filtered_metadata <- subset(filtered_metadata, Dataset.Source.ID %in% input$linetype)
+  if( length(input$Sample_ID) != 0 ){
+    filtered_metadata <- subset(filtered_metadata, Sample.ID %in% input$Sample_ID)
   }
-  if( length(input$vector_type) != 0 ){
-    filtered_metadata <- subset(filtered_metadata, Sample.Tissue %in% input$vector_type)  
+  if( length(input$Sample_Tissue) != 0 ){
+    filtered_metadata <- subset(filtered_metadata, Sample.Tissue %in% input$Sample_Tissue)  
   }
-  if(length(input$gene_combination) != 0){
-    filtered_metadata <- subset(filtered_metadata, Sample.Subtissue.location %in% input$gene_combination)
+  if(length(input$Sample_Type) != 0){
+    filtered_metadata <- subset(filtered_metadata, Sample.Type %in% input$Sample_Type)
   }
-#   if(length(input$tissue_origin) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Tissue_of_Origin %in% input$tissue_origin)
-#   }
-#   if(length(input$diff_state) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Differentiation_State %in% input$diff_state)
-#   }
-#   if(length(input$cell_origin) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Cell_Type_of_Origin %in% input$cell_origin)
-#   }
-#   if(length(input$originating_lab_id) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Originating_Lab_ID %in% input$originating_lab_id)
-#   }
-  
+  if(length(input$Cell_Type) != 0){
+    filtered_metadata <- subset(filtered_metadata, Cell.Type %in% input$Cell_Type)
+  }
+  if(length(input$Cell_Line) != 0){
+    filtered_metadata <- subset(filtered_metadata, Cell.line %in% input$Cell_Line)
+  }
+  if(length(input$Sample_Developmental_Stage) != 0){
+    filtered_metadata <- subset(filtered_metadata, Sample.Developmental.Sage %in% input$Sample_Developmental_Stage)
+  }
+  if(length(input$Gender) != 0){
+    filtered_metadata <- subset(filtered_metadata, Patient.Gender %in% input$Gender)
+  }
+  if(length(input$Blood) != 0){
+    filtered_metadata <- subset(filtered_metadata, Blood.non.blood %in% input$Blood)
+  }
+  if(length(input$Platform) != 0){
+    filtered_metadata <- subset(filtered_metadata, Platform %in% input$Platform)
+  }
+
   filtered_metadata
 }
 
 filter_by_metadata <- function(input, eset){
   filtered_metadata <- pData(eset)
   
-  if( length(input$linetype) != 0 ){
-    filtered_metadata <- subset(filtered_metadata, Dataset.Source.ID %in% input$linetype)
+  if( length(input$Sample_ID) != 0 ){
+    filtered_metadata <- subset(filtered_metadata, Sample.ID %in% input$Sample_ID)
   }
-  if( length(input$vector_type) != 0 ){
-    filtered_metadata <- subset(filtered_metadata, Sample.Tissue %in% input$vector_type)  
+  if( length(input$Sample_Tissue) != 0 ){
+    filtered_metadata <- subset(filtered_metadata, Sample.Tissue %in% input$Sample_Tissue)  
   }
-  if(length(input$gene_combination) != 0){
-    filtered_metadata <- subset(filtered_metadata, Sample.Subtissue.location %in% input$gene_combination)
+  if(length(input$Sample_Type) != 0){
+    filtered_metadata <- subset(filtered_metadata, Sample.Type %in% input$Sample_Type)
   }
-#   if(length(input$tissue_origin) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Tissue_of_Origin %in% input$tissue_origin)
-#   }
-#   if(length(input$diff_state) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Diffname_short %in% input$diff_state)
-#   }
-#   if(length(input$cell_origin) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Cell_Type_of_Origin %in% input$cell_origin)
-#   }
-#   if(length(input$originating_lab) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Originating_Lab %in% input$originating_lab)
-#   }
-#   if(length(input$gender) != 0){
-#     filtered_metadata <- subset(filtered_metadata, Gender %in% input$gender)
-#   }
+  if(length(input$Cell_Type) != 0){
+    filtered_metadata <- subset(filtered_metadata, Cell.Type %in% input$Cell_Type)
+  }
+  if(length(input$Cell_Line) != 0){
+    filtered_metadata <- subset(filtered_metadata, Cell.line %in% input$Cell_Line)
+  }
+  if(length(input$Sample_Developmental_Stage) != 0){
+    filtered_metadata <- subset(filtered_metadata, Sample.Developmental.Sage %in% input$Sample_Developmental_Stage)
+  }
+  if(length(input$Gender) != 0){
+    filtered_metadata <- subset(filtered_metadata, Patient.Gender %in% input$Gender)
+  }
+  if(length(input$Blood) != 0){
+    filtered_metadata <- subset(filtered_metadata, Blood.non.blood %in% input$Blood)
+  }
+  if(length(input$Platform) != 0){
+    filtered_metadata <- subset(filtered_metadata, Platform %in% input$Platform)
+  }
   
   eset[, rownames(filtered_metadata)]
 }

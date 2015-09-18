@@ -32,14 +32,34 @@ myBody <-dashboardBody(
                                title = tagList(shiny::icon("filter", lib = "glyphicon"), "Sample filters"),
                                tags$table(class="table table-condensed",
                                           tags$tr(
-                                            tags$td(selectInput('linetype', h6('Dataset Source ID'),
-                                                                choices=unique(combined_metadata$Dataset.Source.ID),
+                                            tags$td(selectInput('Sample_ID', h6('Sample ID'),
+                                                                choices=unique(combined_metadata$Sample.ID),
                                                                 selectize=T, multiple=T)),
-                                            tags$td(selectInput('vector_type', h6('Sample Tissue'),
+                                            tags$td(selectInput('Sample_Tissue', h6('Sample Tissue'),
                                                                 choices=unique(combined_metadata$Sample.Tissue),
+                                                                selectize=T, multiple=T)),
+                                            tags$td(selectInput('Sample_Type', h6('Sample Type'),
+                                                                choices=unique(combined_metadata$Sample.Type),
                                                                 selectize=T, multiple=T,selected=c('blood','skin','heart'))),
-                                            tags$td(selectInput('gene_combination', h6('Sample Subtissue location'),
-                                                                choices=unique(combined_metadata$Sample.Subtissue.location),
+                                            tags$td(selectInput('Cell_Type', h6('Cell Type'),
+                                                                choices=unique(combined_metadata$Cell.Type),
+                                                                selectize=T, multiple=T))
+                                          ),
+                                          tags$tr(
+                                            tags$td(selectInput('Cell_Line', h6('Cell Line'),
+                                                                choices=unique(combined_metadata$Cell.line),
+                                                                selectize=T, multiple=T)),
+                                            tags$td(selectInput('Sample_Developmental_Stage', h6('Sample Development Stage'),
+                                                                choices=unique(combined_metadata$Sample.Developmental.Sage),
+                                                                selectize=T, multiple=T)),
+                                            tags$td(selectInput('Gender', h6('Gender'),
+                                                                choices=unique(combined_metadata$Patient.Gender),
+                                                                selectize=T, multiple=T)),
+                                            tags$td(selectInput('Blood', h6('Blood'),
+                                                                choices=unique(combined_metadata$Blood.non.blood),
+                                                                selectize=T, multiple=T)),
+                                            tags$td(selectInput('Platform', h6('Platform'),
+                                                                choices=unique(combined_metadata$Platform),
                                                                 selectize=T, multiple=T))
                                           )
                                )
@@ -78,7 +98,7 @@ myBody <-dashboardBody(
                selectInput('heatmap_annotation_labels',
                            'Annotate Samples by:',
                            # -1 to remove the first value "Sample"
-                           choices=colnames(combined_metadata)[colnames(combined_metadata)!="Sample"],
+                           choices=colnames(combined_metadata)[colnames(combined_metadata)!=c("Sample","Sample.ID")],
                            selected='Sample.Tissue')
            ),
            # Plot selection box
