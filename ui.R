@@ -37,7 +37,7 @@ myBody <-dashboardBody(
                                                                 selectize=T, multiple=T)),
                                             tags$td(selectInput('Sample_Tissue', h6('Sample Tissue'),
                                                                 choices=unique(combined_metadata$Sample.Tissue),
-                                                                selectize=T, multiple=T,selected=c('blood','skin','heart'))),
+                                                                selectize=T, multiple=T,selected=c('colon','stomach'))),
                                             tags$td(selectInput('Sample_Type', h6('Sample Type'),
                                                                 choices=unique(combined_metadata$Sample.Type),
                                                                 selectize=T, multiple=T)),

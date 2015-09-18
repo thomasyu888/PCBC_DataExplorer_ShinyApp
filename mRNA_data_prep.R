@@ -25,7 +25,7 @@ flog.info('Reading the PCBC normalized mRNA Exp data from Synapse', name='synaps
 #data
 data_GTEx <- synGet("syn4943851")
 load(data_GTEx@filePath)
-mRNA_NormCounts<- mRNA_NormCounts[c(1:100),]
+#mRNA_NormCounts<- mRNA_NormCounts[c(1:100),]
 
 ## remove version from ENSEMBL ID
 #rownames(mRNA_NormCounts) <- gsub('\\..*', '',mRNA_NormCounts$tracking_id)
