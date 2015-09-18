@@ -10,14 +10,22 @@ mRNA_NormCounts <- synGet('syn3546481')
 
 #read in the file
 mRNA_NormCounts <- read.delim(mRNA_NormCounts@filePath, header=T, sep='\t',
-                              as.is=T, stringsAsFactors = F, check.names=F)\
+                              as.is=T, stringsAsFactors = F, check.names=F)
+rownames(mRNA_NormCounts) <- mRNA_NormCounts$samples
+mRNA_NormCounts$samples <- NULL
 #log this log10....mRNA_normcounts + 0.001
+#scale by row and columns
+#Save this data and reupload onto synapse
+
+mRNA_NormCounts <- log10(mRNA_NormCounts+0.5)
+mRNA_NormCounts <- scale(mRNA_NormCounts)
+mRNA_NormCounts <- t(scale(t(mRNA_NormCounts)))
+
 mRNA_NormCounts<- mRNA_NormCounts[c(1:100),]
 
 ## remove version from ENSEMBL ID
 #rownames(mRNA_NormCounts) <- gsub('\\..*', '',mRNA_NormCounts$tracking_id)
-rownames(mRNA_NormCounts) <- mRNA_NormCounts$samples
-mRNA_NormCounts$samples <- NULL
+
 
 #mRNA_NormCounts$symbol <- NULL
 #mRNA_NormCounts$tracking_id <- NULL
@@ -28,9 +36,9 @@ mRNA_NormCounts$samples <- NULL
 ###
 flog.info('Reading the PCBC mRNA metadata from Synapse', name='synapse')
 
-mRNAMeta <- synGet("syn3555917")
-mRNAMeta <- read.csv(mRNAMeta@filePath)
+mRNAMeta <- synGet("syn3555917")##Create a synapse Table with csv
 
+mRNAMeta <- read.csv(mRNAMeta@filePath)
 mRNA_metadata<- mRNAMeta[c(metadataIdCol, metadataColsToUse)]
 
 rownames(mRNA_metadata) <- mRNA_metadata[, metadataIdCol]
