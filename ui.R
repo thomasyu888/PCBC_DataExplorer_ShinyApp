@@ -37,7 +37,7 @@ myBody <-dashboardBody(
                                                                 selectize=T, multiple=T)),
                                             tags$td(selectInput('vector_type', h6('Sample Tissue'),
                                                                 choices=unique(combined_metadata$Sample.Tissue),
-                                                                selectize=T, multiple=T)),
+                                                                selectize=T, multiple=T,selected=c('blood','skin','heart'))),
                                             tags$td(selectInput('gene_combination', h6('Sample Subtissue location'),
                                                                 choices=unique(combined_metadata$Sample.Subtissue.location),
                                                                 selectize=T, multiple=T))
@@ -48,17 +48,7 @@ myBody <-dashboardBody(
                                           
                     column(width = 3,
                            
-                           # Choose sample labels
-                           box(width=NULL, status='primary', collapsible=TRUE, 
-                               collapsed=TRUE, solidHeader=TRUE,
-                               title = tagList(shiny::icon("th-list", lib="glyphicon"),
-                                               "Sample labels"),               
-                               selectInput('heatmap_annotation_labels',
-                                           'Annotate Samples by:',
-                                           # -1 to remove the first value "Sample"
-                                           choices=colnames(combined_metadata)[colnames(combined_metadata)!="Sample"],
-                                           selected='Sample.Tissue')
-                           ),
+
                            
                            # Information on number of features/samples selected
                            infoBoxOutput("featxsamples", width=NULL)
@@ -75,24 +65,34 @@ myBody <-dashboardBody(
 
               plotOutput("heatmap",height=650)
                                
-            )
+          )
            
     ),
     
     column(width = 3,
-           
-           # Plot selection box
-           box(width = NULL, status = "primary", solidHeader=TRUE,
-               title="Select data to display",
-               selectInput("plotdisplay",
-                           label=NULL, #h6(""),
-                           choices=c("mRNA"),
-                           selectize=T, multiple=F, selected="mRNA"),
-               
-               #checkboxInput('show_dt', 'Show data values instead of heatmap', value = FALSE),
-               
-               uiOutput("plotHelp")               
+           # Choose sample labels
+           box(width=NULL, status='primary', collapsible=TRUE, 
+               collapsed=TRUE, solidHeader=TRUE,
+               title = tagList(shiny::icon("th-list", lib="glyphicon"),
+                               "Sample labels"),               
+               selectInput('heatmap_annotation_labels',
+                           'Annotate Samples by:',
+                           # -1 to remove the first value "Sample"
+                           choices=colnames(combined_metadata)[colnames(combined_metadata)!="Sample"],
+                           selected='Sample.Tissue')
            ),
+           # Plot selection box
+#            box(width = NULL, status = "primary", solidHeader=TRUE,
+#                title="Select data to display",
+#                selectInput("plotdisplay",
+#                            label=NULL, #h6(""),
+#                            choices=c("mRNA"),
+#                            selectize=T, multiple=F, selected="mRNA"),
+#                
+#                #checkboxInput('show_dt', 'Show data values instead of heatmap', value = FALSE),
+#                
+#                uiOutput("plotHelp")               
+#            ),
            
            # Searching box
            tabBox(width=NULL, status="info",
