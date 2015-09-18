@@ -6,21 +6,25 @@ flog.info('Reading the PCBC normalized mRNA Exp data from Synapse', name='synaps
 
 #mRNA_NormCounts <- synGet('syn2701943')
 #TreeOfLife
-mRNA_NormCounts <- synGet('syn3546481')
+#mRNA_NormCounts <- synGet('syn3546481')
 
 #read in the file
-mRNA_NormCounts <- read.delim(mRNA_NormCounts@filePath, header=T, sep='\t',
-                              as.is=T, stringsAsFactors = F, check.names=F)
-rownames(mRNA_NormCounts) <- mRNA_NormCounts$samples
-mRNA_NormCounts$samples <- NULL
+#mRNA_NormCounts <- read.delim(mRNA_NormCounts@filePath, header=T, sep='\t',
+#                              as.is=T, stringsAsFactors = F, check.names=F)
+#rownames(mRNA_NormCounts) <- mRNA_NormCounts$samples
+#mRNA_NormCounts$samples <- NULL
 #log this log10....mRNA_normcounts + 0.001
 #scale by row and columns
 #Save this data and reupload onto synapse
 
-mRNA_NormCounts <- log10(mRNA_NormCounts+0.5)
-mRNA_NormCounts <- scale(mRNA_NormCounts)
-mRNA_NormCounts <- t(scale(t(mRNA_NormCounts)))
+#mRNA_NormCounts <- log10(mRNA_NormCounts+0.5)
+#mRNA_NormCounts <- scale(mRNA_NormCounts)
+#mRNA_NormCounts <- t(scale(t(mRNA_NormCounts)))
 
+
+#data
+data_GTEx <- synGet("syn4943851")
+load(data_GTEx@filePath)
 mRNA_NormCounts<- mRNA_NormCounts[c(1:100),]
 
 ## remove version from ENSEMBL ID
