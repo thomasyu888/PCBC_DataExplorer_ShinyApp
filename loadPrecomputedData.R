@@ -7,8 +7,10 @@ hg19_annot <- readRDS("precomputed_data/precomputed_hg19_annot.RDS")
 hg19_grpd <- readRDS("precomputed_data/precomputed_hg19_grpd.RDS")
 
 #sample gene list of the user input area
-df <- read.table("precomputed_data/pre_selected_genelist.txt",sep="\t")
-sample_gene_list <- as.character(unique(df$V5))
+sample_genes_obj <- synGet("syn4943393")
+df <- read.delim(getFileLocation(sample_genes_obj), sep="\t")
+sample_gene_list <- as.character(unique(df$feature))
+
 
 sample_miRNAs <- c("hsa-mir-627", "hsa-mir-34c", "hsa-let-7g",
                    "hsa-mir-19a", "hsa-mir-342")
