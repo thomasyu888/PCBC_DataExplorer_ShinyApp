@@ -127,12 +127,12 @@ shinyServer(
     #       
            if (curr_filter_type == "Gene_mRNA") {
              featureList <- clean_list(geneList, change_case=toupper)
-             #featureList <- convert_to_ensemblIds(featureList)
+             featureList <- convert_to_HUGOIds(featureList)
            }
            else if (curr_filter_type == "Pathway_mRNA") {
              featureList <- as.character(unlist(pathways_list[selectedPathway]))
              featureList <- clean_list(featureList, change_case=toupper)
-            # featureList <- convert_to_ensemblIds(featureList)
+             featureList <- convert_to_HUGOIds(featureList)
            }
     #       else if (curr_filter_type == "Gene_miRNA") {
     #         featureList <- clean_list(geneList, change_case=toupper)
@@ -221,7 +221,7 @@ shinyServer(
       
       validate( need( ncol(m) != 0, "Filtered matrix contains 0 Samples.") )
       validate( need( nrow(m) != 0, "Filtered matrix contains 0 features.") )
-      #validate( need(nrow(m) < 10000, "Filtered matrix contains > 10000 genes.") )
+      validate( need(nrow(m) < 5000, "Filtered matrix contains > 10000 genes.") )
       
       filtered_metadata <- pData(m_eset)
       annotation <- get_heatmapAnnotation(input$heatmap_annotation_labels, filtered_metadata)
