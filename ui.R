@@ -89,7 +89,8 @@ myBody <-dashboardBody(
                selectInput('heatmap_annotation_labels',
                            'Annotate Samples by:',
                            # -1 to remove the first value "Sample"
-                           choices=colnames(combined_metadata)[colnames(combined_metadata)!=c("Sample","Sample.ID")],
+                           #choices=colnames(combined_metadata)[colnames(combined_metadata)!=c("Sample","Sample.ID")],
+                           choices=metadataColsToUse,
                            selected='Sample.Tissue')
            ),
            # Plot selection box
