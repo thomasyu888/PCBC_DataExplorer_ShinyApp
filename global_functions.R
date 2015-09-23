@@ -89,18 +89,18 @@ get_expMatrix_withcorrelated_genes <- function(geneIds, expMatrix, corThreshold,
 get_filtered_metadata <- function(input, metadata){
   filtered_metadata <- metadata
   
-  if( length(input$Sample_ID) != 0 ){
-    filtered_metadata <- subset(filtered_metadata, Sample.ID %in% input$Sample_ID)
-  }
+  #if( length(input$Sample_ID) != 0 ){
+  #  filtered_metadata <- subset(filtered_metadata, Sample.ID %in% input$Sample_ID)
+  #}
   if( length(input$Sample_Tissue) != 0 ){
     filtered_metadata <- subset(filtered_metadata, Sample.Tissue %in% input$Sample_Tissue)  
   }
-  if(length(input$Sample_Type) != 0){
-    filtered_metadata <- subset(filtered_metadata, Sample.Type %in% input$Sample_Type)
-  }
-  if(length(input$Cell_Type) != 0){
-    filtered_metadata <- subset(filtered_metadata, Cell.Type %in% input$Cell_Type)
-  }
+  #if(length(input$Sample_Type) != 0){
+  #  filtered_metadata <- subset(filtered_metadata, Sample.Type %in% input$Sample_Type)
+  #}
+  #if(length(input$Cell_Type) != 0){
+  #  filtered_metadata <- subset(filtered_metadata, Cell.Type %in% input$Cell_Type)
+  #}
   if(length(input$Cell_Line) != 0){
     filtered_metadata <- subset(filtered_metadata, Cell.line %in% input$Cell_Line)
   }
@@ -123,18 +123,18 @@ get_filtered_metadata <- function(input, metadata){
 filter_by_metadata <- function(input, eset){
   filtered_metadata <- pData(eset)
   
-  if( length(input$Sample_ID) != 0 ){
-    filtered_metadata <- subset(filtered_metadata, Sample.ID %in% input$Sample_ID)
-  }
+  #if( length(input$Sample_ID) != 0 ){
+  #  filtered_metadata <- subset(filtered_metadata, Sample.ID %in% input$Sample_ID)
+  #}
   if( length(input$Sample_Tissue) != 0 ){
     filtered_metadata <- subset(filtered_metadata, Sample.Tissue %in% input$Sample_Tissue)  
   }
-  if(length(input$Sample_Type) != 0){
-    filtered_metadata <- subset(filtered_metadata, Sample.Type %in% input$Sample_Type)
-  }
-  if(length(input$Cell_Type) != 0){
-    filtered_metadata <- subset(filtered_metadata, Cell.Type %in% input$Cell_Type)
-  }
+  #if(length(input$Sample_Type) != 0){
+  #  filtered_metadata <- subset(filtered_metadata, Sample.Type %in% input$Sample_Type)
+  #}
+  #if(length(input$Cell_Type) != 0){
+  #  filtered_metadata <- subset(filtered_metadata, Cell.Type %in% input$Cell_Type)
+  #}
   if(length(input$Cell_Line) != 0){
     filtered_metadata <- subset(filtered_metadata, Cell.line %in% input$Cell_Line)
   }
