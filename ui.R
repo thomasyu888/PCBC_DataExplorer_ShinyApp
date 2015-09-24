@@ -37,22 +37,23 @@ myBody <-dashboardBody(
 #                                                                 selectize=T, multiple=T)),
                                             tags$td(selectInput('Sample_Tissue', h6('Tissue'),
                                                                 choices=unique(combined_metadata$Sample.Tissue),
+                                                                selectize=T, multiple=T)),
+                                            tags$td(selectInput('Sample.Subtissue.location', h6('Subtissue location'),
+                                                                choices=unique(combined_metadata$Sample.Subtissue.location),
                                                                 selectize=T, multiple=T))
 #                                             tags$td(selectInput('Blood', h6('Blood'),
 #                                                                 choices=unique(combined_metadata$Blood.non.blood),
 #                                                                 selectize=T, multiple=T))
-                                          ),
-                                           tags$tr(
-                                             tags$td(selectInput('Sample.Subtissue.location', h6('Subtissue location'),
-                                                                 choices=unique(combined_metadata$Sample.Subtissue.location),
-                                                                 selectize=T, multiple=T))#,
+                                          )#,
+                                          # tags$tr(
+#,
 #                                             tags$td(selectInput('Gender', h6('Gender'),
 #                                                                 choices=unique(combined_metadata$Patient.Gender),
 #                                                                 selectize=T, multiple=T)),
 #                                             tags$td(selectInput('Platform', h6('Platform'),
 #                                                                 choices=unique(combined_metadata$Platform),
 #                                                                 selectize=T, multiple=T))
-                                           )
+                                          # )
                                )
                            )
                     ),
@@ -120,7 +121,8 @@ myBody <-dashboardBody(
                   tabPanel("Pathway", 
                            selectInput("selected_pathways", label=NULL,
                                        choices = names(pathways_list),
-                                       selectize=T, multiple=F))
+                                       selectize=T, multiple=F),
+                           actionButton("refreshPathway","Refresh"))
                   #tabPanel("miRNA", 
                    #        tags$textarea(paste0(sample_miRNAs, collapse="\n"),
                     #                     rows=5, id="custom_mirna_list", style="width: 100%"),
