@@ -83,9 +83,9 @@ if (use_cache) {
 #                          "Cell_Line_of_Origin", "Donor_ID", "Originating_Lab", "Cell_Type",
 #                         "Culture_Conditions")
 #   metadataIdCol <- "UID"
-  metadataColsToUse <- c("Sample.Tissue","Cell.line",
-                         "Sample.Developmental.Sage","Patient.Gender",
-                         "Blood.non.blood","Platform")
+  metadataColsToUse <- c("Sample.Tissue","Sample.Subtissue.location")#"Cell.line",
+                         #"Sample.Developmental.Sage","Patient.Gender",
+                         #"Blood.non.blood","Platform")
   metadataIdCol <- "Sample.ID"
   
   #get the MSigDB data

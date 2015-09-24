@@ -32,27 +32,27 @@ myBody <-dashboardBody(
                                title = tagList(shiny::icon("filter", lib = "glyphicon"), "Sample filters"),
                                tags$table(class="table table-condensed",
                                           tags$tr(
-                                            tags$td(selectInput('Cell_Line', h6('Cell Line'),
-                                                                choices=unique(combined_metadata$Cell.line),
-                                                                selectize=T, multiple=T)),
-                                            tags$td(selectInput('Sample_Tissue', h6('Sample Tissue'),
+#                                             tags$td(selectInput('Cell_Line', h6('Cell Line'),
+#                                                                 choices=unique(combined_metadata$Cell.line),
+#                                                                 selectize=T, multiple=T)),
+                                            tags$td(selectInput('Sample_Tissue', h6('Tissue'),
                                                                 choices=unique(combined_metadata$Sample.Tissue),
-                                                                selectize=T, multiple=T)),
-                                            tags$td(selectInput('Blood', h6('Blood'),
-                                                                choices=unique(combined_metadata$Blood.non.blood),
                                                                 selectize=T, multiple=T))
+#                                             tags$td(selectInput('Blood', h6('Blood'),
+#                                                                 choices=unique(combined_metadata$Blood.non.blood),
+#                                                                 selectize=T, multiple=T))
                                           ),
-                                          tags$tr(
-                                            tags$td(selectInput('Sample_Developmental_Stage', h6('Sample Development Stage'),
-                                                                choices=unique(combined_metadata$Sample.Developmental.Sage),
-                                                                selectize=T, multiple=T)),
-                                            tags$td(selectInput('Gender', h6('Gender'),
-                                                                choices=unique(combined_metadata$Patient.Gender),
-                                                                selectize=T, multiple=T)),
-                                            tags$td(selectInput('Platform', h6('Platform'),
-                                                                choices=unique(combined_metadata$Platform),
-                                                                selectize=T, multiple=T))
-                                          )
+                                           tags$tr(
+                                             tags$td(selectInput('Sample.Subtissue.location', h6('Subtissue location'),
+                                                                 choices=unique(combined_metadata$Sample.Subtissue.location),
+                                                                 selectize=T, multiple=T))#,
+#                                             tags$td(selectInput('Gender', h6('Gender'),
+#                                                                 choices=unique(combined_metadata$Patient.Gender),
+#                                                                 selectize=T, multiple=T)),
+#                                             tags$td(selectInput('Platform', h6('Platform'),
+#                                                                 choices=unique(combined_metadata$Platform),
+#                                                                 selectize=T, multiple=T))
+                                           )
                                )
                            )
                     ),

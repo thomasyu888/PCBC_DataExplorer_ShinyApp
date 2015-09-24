@@ -48,14 +48,13 @@ mRNA_metadata<- mRNAMeta[c(metadataIdCol, metadataColsToUse)]
 rownames(mRNA_metadata) <- mRNA_metadata[, metadataIdCol]
 #mRNA_metadata[, metadataIdCol] <- NULL
 mRNA_metadata$Sample.Tissue <- tolower(mRNA_metadata$Sample.Tissue)
-mRNA_metadata$Sample.Developmental.Sage <- tolower(mRNA_metadata$Sample.Developmental.Sage)
+#mRNA_metadata$Sample.Developmental.Sage <- tolower(mRNA_metadata$Sample.Developmental.Sage)
 
 
 ## Only keep samples in both
 mrna_in_common <- intersect(rownames(mRNA_metadata), colnames(mRNA_NormCounts))
 mRNA_metadata <- mRNA_metadata[mrna_in_common, ]
 mRNA_NormCounts <- mRNA_NormCounts[, mrna_in_common]
-
 
   
 mRNA_features<-  data.frame(explicit_rownames = rownames(mRNA_NormCounts))
