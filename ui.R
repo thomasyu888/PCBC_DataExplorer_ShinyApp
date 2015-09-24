@@ -90,7 +90,7 @@ myBody <-dashboardBody(
                            'Annotate Samples by:',
                            # -1 to remove the first value "Sample"
                            #choices=colnames(combined_metadata)[colnames(combined_metadata)!=c("Sample","Sample.ID")],
-                           choices=metadataColsToUse,
+                           choices=c("Tissue"="Sample.Tissue", "Subtissue Location"="Sample.Subtissue.location"),
                            selected='Sample.Tissue')
            ),
            # Plot selection box
