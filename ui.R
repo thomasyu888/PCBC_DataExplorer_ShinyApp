@@ -121,8 +121,7 @@ myBody <-dashboardBody(
                   tabPanel("Pathway", 
                            selectInput("selected_pathways", label=NULL,
                                        choices = names(pathways_list),
-                                       selectize=T, multiple=F),
-                           actionButton("refreshPathway","Refresh"))
+                                       selectize=T, multiple=F))
                   #tabPanel("miRNA", 
                    #        tags$textarea(paste0(sample_miRNAs, collapse="\n"),
                     #                     rows=5, id="custom_mirna_list", style="width: 100%"),
