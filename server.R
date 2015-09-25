@@ -18,13 +18,13 @@ shinyServer(
   
   function(input, output, session) {
     
-#     dataset <- reactive({
-#       switch(input$plotdisplay,
-#              mRNA = eset.mRNA,
-#              miRNA = eset.miRNA,
-#              Methylation = eset.meth)
-#       
-#     })
+    #     dataset <- reactive({
+    #       switch(input$plotdisplay,
+    #              mRNA = eset.mRNA,
+    #              miRNA = eset.miRNA,
+    #              Methylation = eset.meth)
+    #       
+    #     })
     
     output$plotHelp <- renderUI({
       filter_type_text <- filter_type_help()
@@ -40,17 +40,17 @@ shinyServer(
              Pathway_mRNA="Plotting selected genes.",
              #miRNA_mRNA="Plotting genes targeted by selected miRNAs.",
              
-#              Gene_miRNA="Plotting miRNAs targeting selected genes.",
-#              Pathway_miRNA="Plotting miRNAs targeting selected genes.",
-#              miRNA_miRNA="Plotting selected miRNAs.",
-#              
-#              Gene_Methylation="Plotting methylation probes targeting selected genes.",
-#              Pathway_Methylation="Plotting methylation probes targeting selected genes.",
-#              miRNA_Methylation="Plotting methylation probes for genes targeted by selected miRNAs.",
-#              
-#              Methylation_Methylation="Plotting methylation probes.",
-#              Methylation_mRNA="Plotting genes targeted by methylation probes.",
-#              
+             #              Gene_miRNA="Plotting miRNAs targeting selected genes.",
+             #              Pathway_miRNA="Plotting miRNAs targeting selected genes.",
+             #              miRNA_miRNA="Plotting selected miRNAs.",
+             #              
+             #              Gene_Methylation="Plotting methylation probes targeting selected genes.",
+             #              Pathway_Methylation="Plotting methylation probes targeting selected genes.",
+             #              miRNA_Methylation="Plotting methylation probes for genes targeted by selected miRNAs.",
+             #              
+             #              Methylation_Methylation="Plotting methylation probes.",
+             #              Methylation_mRNA="Plotting genes targeted by methylation probes.",
+             #              
              "Unknown selection.")
       
     })  
@@ -65,13 +65,13 @@ shinyServer(
       flog.debug(sprintf("# features in common: %s", length(feats)), name="server")
       ds_filtered <- ds_filtered[feats, ]
       
-#       if (input$incl_corr_genes == 'TRUE' & input$plotdisplay == 'mRNA' & 
-#             input$custom_search %in% c("Gene", "Pathway")) { 
-#         
-#         ds_filtered <- get_eset_withcorrelated_genes(feats, dataset(),
-#                                                      input$corr_threshold,
-#                                                      input$correlation_direction)
-#       }
+      #       if (input$incl_corr_genes == 'TRUE' & input$plotdisplay == 'mRNA' & 
+      #             input$custom_search %in% c("Gene", "Pathway")) { 
+      #         
+      #         ds_filtered <- get_eset_withcorrelated_genes(feats, dataset(),
+      #                                                      input$corr_threshold,
+      #                                                      input$correlation_direction)
+      #       }
       
       # zero variance filter
       rows_to_keep <- apply(exprs(ds_filtered), 1, var) > 0
@@ -94,6 +94,7 @@ shinyServer(
                       scrollCollapse = TRUE))
     })
     
+    
     # prepare data for download
     output$download_data <- downloadHandler(
       filename = function() {'PCBC_data.csv'},
@@ -106,40 +107,57 @@ shinyServer(
       }
     )
     
-         user_submitted_features <- reactive({
-           if (input$custom_search == "Gene") {
-             input$refreshGene
-           }
-    #       else if(input$custom_search == "miRNA") {
-    #         input$refreshmiRNA
-    #       }
-    #       else if(input$custom_search == "Methylation") {
-    #         input$refreshMethyl
-    #       }
-    #       
-           geneList <- isolate(input$custom_input_list)
-           selectedPathway <- input$selected_pathways
-
-           curr_filter_type <- paste(input$custom_search, "mRNA", sep="_")
-           flog.debug(curr_filter_type, name="server")
-    #       
-           if (curr_filter_type == "Gene_mRNA") {
-             featureList <- clean_list(geneList, change_case=toupper)
-             featureList <- convert_to_HUGOIds(featureList)
-           }
-           else if (curr_filter_type == "Pathway_mRNA") {
-             featureList <- as.character(unlist(pathways_list[selectedPathway]))
-             featureList <- clean_list(featureList, change_case=toupper)
-             featureList <- convert_to_HUGOIds(featureList)
-           }
-           else {
-             featureList <- c()
-           }
-    #       
-           flog.debug(sprintf("In %s, selected %s features", curr_filter_type, length(featureList)), name="server")
-           
-           featureList
-         })
+    output$topgene_linkOut <- reactive({
+      prefix <- '<form action="https://toppgene.cchmc.org/CheckInput.action" method="post" target="_blank" display="inline">\
+      <input type="hidden" name="query" value="TOPPFUN">\
+      <input type="hidden" id="type" name="type" value="HGNC">\
+      <input type="hidden" name="training_set" id="training_set" value="%s">\
+      <input type="Submit" class="btn shiny-download-link" value="Enrichment Analysis in ToppGene">\
+      </form>'
+      geneIds <- rownames(filtered_dataset())
+      #geneIds <- convert_to_HUGOIds(geneIds)
+      geneIds <- paste(geneIds, collapse=" ")
+      
+      #generate the HTML content
+      htmlContent <- sprintf(prefix, geneIds)
+      
+      htmlContent
+    })
+    
+    user_submitted_features <- reactive({
+      if (input$custom_search == "Gene") {
+        input$refreshGene
+      }
+      #       else if(input$custom_search == "miRNA") {
+      #         input$refreshmiRNA
+      #       }
+      #       else if(input$custom_search == "Methylation") {
+      #         input$refreshMethyl
+      #       }
+      #       
+      geneList <- isolate(input$custom_input_list)
+      selectedPathway <- input$selected_pathways
+      
+      curr_filter_type <- paste(input$custom_search, "mRNA", sep="_")
+      flog.debug(curr_filter_type, name="server")
+      #       
+      if (curr_filter_type == "Gene_mRNA") {
+        featureList <- clean_list(geneList, change_case=toupper)
+        featureList <- convert_to_HUGOIds(featureList)
+      }
+      else if (curr_filter_type == "Pathway_mRNA") {
+        featureList <- as.character(unlist(pathways_list[selectedPathway]))
+        featureList <- clean_list(featureList, change_case=toupper)
+        featureList <- convert_to_HUGOIds(featureList)
+      }
+      else {
+        featureList <- c()
+      }
+      #       
+      flog.debug(sprintf("In %s, selected %s features", curr_filter_type, length(featureList)), name="server")
+      
+      featureList
+    })
     
     output$featxsamples <- renderInfoBox({
       ds <- filtered_dataset()
@@ -177,20 +195,20 @@ shinyServer(
       fontsize_row <- ifelse(nrow(m) > 100, 0, 8)
       fontsize_col <- ifelse(ncol(m) > 50, 0, 8)    
       
-     # withProgress(session, {
-       # setProgress(message = "clustering & rendering heatmap, please wait", 
-         #           detail = "This may take a few moments...")
-        heatmap_cache$heatmap <- expHeatMap(m, annotation,
-                                            clustering_distance_rows = input$clustering_distance,
-                                            clustering_distance_cols = input$clustering_distance,
-                                            fontsize_col=fontsize_col, 
-                                            fontsize_row=fontsize_row,
-                                            scale=F,
-                                            clustering_method = input$clustering_method,
-                                            #explicit_rownames = fData(m_eset)$explicit_rownames,
-                                            cluster_rows=cluster_rows, cluster_cols=cluster_cols,
-                                            drawColD=FALSE)
-    #  }) #END withProgress
+      # withProgress(session, {
+      #setProgress(message = "clustering & rendering heatmap, please wait", 
+      #     detail = "This may take a few moments...")
+      heatmap_cache$heatmap <- expHeatMap(m, annotation,
+                                          clustering_distance_rows = input$clustering_distance,
+                                          clustering_distance_cols = input$clustering_distance,
+                                          fontsize_col=fontsize_col, 
+                                          fontsize_row=fontsize_row,
+                                          scale=F,
+                                          clustering_method = input$clustering_method,
+                                          #explicit_rownames = fData(m_eset)$explicit_rownames,
+                                          cluster_rows=cluster_rows, cluster_cols=cluster_cols,
+                                          drawColD=FALSE)
+      #}) #END withProgress
     })
     
     

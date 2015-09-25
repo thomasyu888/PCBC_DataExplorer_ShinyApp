@@ -221,7 +221,10 @@ myBody <-dashboardBody(
                            choices=c("comma separated (CSV)", "tab separated (TSV)"),
                            selectize=F, multiple=F, selected="comma separated (CSV)"),
                downloadButton(outputId='download_data', label='Download')
-           )
+
+           ),
+htmlOutput(outputId = "topgene_linkOut")
+
     )
   )
 )
